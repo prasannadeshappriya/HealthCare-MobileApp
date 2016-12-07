@@ -1,4 +1,4 @@
-package com.a14roxgmail.prasanna.healthcareapp.ListView;
+package com.a14roxgmail.prasanna.healthcareapp.ListView.adapters;
 
 import android.content.Context;
 import android.view.View;
@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.a14roxgmail.prasanna.healthcareapp.ListView.patient;
 import com.a14roxgmail.prasanna.healthcareapp.R;
 
 import java.util.List;
@@ -13,11 +14,11 @@ import java.util.List;
 /**
  * Created by Prasanna Deshappriya on 12/1/2016.
  */
-public class patient_adapter extends BaseAdapter {
+public class adapter_patient extends BaseAdapter {
     private List<patient> patient_list;
     private Context context;
 
-    public patient_adapter(Context context, List<patient> patient_list) {
+    public adapter_patient(Context context, List<patient> patient_list) {
         this.context = context;
         this.patient_list = patient_list;
     }
@@ -39,7 +40,7 @@ public class patient_adapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        View v = View.inflate(context, R.layout.patient_custom_adapter,null );
+        View v = View.inflate(context, R.layout.adapter_lst_patient,null );
 
         TextView patient_name = (TextView) v.findViewById(R.id.tvAdapterName);
         TextView patient_NIC = (TextView) v.findViewById(R.id.tvAdapterNIC);

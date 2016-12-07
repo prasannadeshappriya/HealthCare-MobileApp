@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.a14roxgmail.prasanna.healthcareapp.ListView.*;
+import com.a14roxgmail.prasanna.healthcareapp.ListView.adapters.adapter_patient;
 import com.a14roxgmail.prasanna.healthcareapp.R;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import java.util.List;
  * Created by Prasanna Deshappriya on 12/1/2016.
  */
 public class patients_fragment extends Fragment {
-    patient_adapter adapter;
+    adapter_patient adapter;
     List<patient> patientList;
     ListView lstPatient;
     @Nullable
@@ -40,7 +41,7 @@ public class patients_fragment extends Fragment {
         patientList.add(new patient("Polonnaruwa",1,"Shammika Deshappriya", "942222467V"));
         patientList.add(new patient("Kaluthara",1,"Kevin Charles", "845562467V"));
         patientList.add(new patient("Colombo",1,"Ruwan Hettiarachchi", "745855467V"));
-        adapter = new patient_adapter(getContext(),patientList);
+        adapter = new adapter_patient(getContext(),patientList);
         lstPatient.setAdapter(adapter);
     }
 

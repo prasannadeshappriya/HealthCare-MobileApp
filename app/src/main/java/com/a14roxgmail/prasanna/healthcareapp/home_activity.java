@@ -136,10 +136,14 @@ public class home_activity extends AppCompatActivity
             toolbar.setTitle("Settings");
             settings_fragment settings = new settings_fragment();
             FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
-            fragTrans.replace(R.id.frmMain,settings);
+            fragTrans.replace(R.id.frmMain, settings);
             fragTrans.commit();
-        } else if (id == R.id.nav_share) {
-
+        }else if (id == R.id.nav_profile) {
+            toolbar.setTitle("Profile");
+            profile_fragment profile = new profile_fragment();
+            FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
+            fragTrans.replace(R.id.frmMain,profile);
+            fragTrans.commit();
         } else if (id == R.id.nav_signout) {
             sqldb.login_data_signout(signInEmail);
             Intent i = new Intent(this,login_activity.class);

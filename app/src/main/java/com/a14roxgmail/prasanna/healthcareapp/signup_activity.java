@@ -77,8 +77,8 @@ public class signup_activity extends AppCompatActivity {
     private void start_signup_process(){
         if(validate()){
             final server_request request = new server_request(6,this);
-            //request.set_server_url("http://192.168.43.101/request/HealthCareServer.php");
-            request.set_server_url("http://10.0.2.2/request/HealthCareServer.php");
+            request.set_server_url("http://192.168.43.101/request/HealthCareServer.php");
+            //request.set_server_url("http://10.0.2.2/request/HealthCareServer.php");
             request.setParams("SIGN_UP","PROCESS");
             request.setParams(etName.getText().toString(),"NAME");
             request.setParams(etAddress.getText().toString(),"ADDRESS");
