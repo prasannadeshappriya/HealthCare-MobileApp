@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import com.a14roxgmail.prasanna.healthcareapp.Database.database;
 import com.a14roxgmail.prasanna.healthcareapp.Fragments.*;
+import com.a14roxgmail.prasanna.healthcareapp.Services.sync_service;
 
 public class home_activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -32,6 +33,10 @@ public class home_activity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        Intent i = new Intent(getApplicationContext(),sync_service.class);
+        i.putExtra("args","SYNC");
+        startService(i);
 
         home_fragment home = new home_fragment();
         FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();

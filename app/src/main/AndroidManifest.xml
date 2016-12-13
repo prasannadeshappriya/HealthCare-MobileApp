@@ -3,6 +3,7 @@
     package="com.a14roxgmail.prasanna.healthcareapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -19,13 +20,16 @@
         </activity>
         <activity
             android:name=".signup_activity"
-            android:windowSoftInputMode="adjustResize|stateHidden"/>
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".home_activity"
             android:label="@string/title_activity_home"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
 
-
+        <service
+            android:name=".Services.sync_service"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>
