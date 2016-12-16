@@ -8,8 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.a14roxgmail.prasanna.healthcareapp.ListView.*;
 import com.a14roxgmail.prasanna.healthcareapp.ListView.adapters.adapter_tips;
+import com.a14roxgmail.prasanna.healthcareapp.Models.tips;
 import com.a14roxgmail.prasanna.healthcareapp.R;
 
 import java.util.ArrayList;

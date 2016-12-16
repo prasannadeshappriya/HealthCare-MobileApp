@@ -1,4 +1,4 @@
-package com.a14roxgmail.prasanna.healthcareapp;
+package com.a14roxgmail.prasanna.healthcareapp.UI;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -6,12 +6,20 @@ import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.a14roxgmail.prasanna.healthcareapp.DAO.userDAO;
 import com.a14roxgmail.prasanna.healthcareapp.Database.database;
+import com.a14roxgmail.prasanna.healthcareapp.Models.user;
+import com.a14roxgmail.prasanna.healthcareapp.R;
+import com.a14roxgmail.prasanna.healthcareapp.constants;
+import com.a14roxgmail.prasanna.healthcareapp.server_request;
+
 import org.json.JSONException;
 
 public class login_activity extends AppCompatActivity {
@@ -20,8 +28,8 @@ public class login_activity extends AppCompatActivity {
     private EditText etPassword;
     private TextView lnkSignUp;
 
+    private userDAO user_dao;
     private database sqlite_db;
-    final String TAG = "TAG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +39,10 @@ public class login_activity extends AppCompatActivity {
         init();
 
 
-        String autoLogIn = sqlite_db.checkAutoLogin();
+        String autoLogIn = user_dao.checkAutoLogin();
         if (!autoLogIn.equals("")) {
             Intent i = new Intent(this, home_activity.class);
-            Log.i(TAG, "Fucking insert :- " + autoLogIn);
+            Log.i(constants.TAG, "Fucking insert :- " + autoLogIn);
             i.putExtra("EMAIL_ADDRESS", autoLogIn);
             startActivity(i);
             this.finish();
@@ -73,7 +81,16 @@ public class login_activity extends AppCompatActivity {
     }
 
     private boolean validate(){
-        return true;
+        boolean con = true;
+        if(!Patterns.EMAIL_ADDRESS.matcher(etEmail.getText()).matches()){
+            etEmail.setError("Email address is invalid");
+            con = false;
+        }
+        if(con) {
+            return true;
+        }else{
+            return false;
+        }
     }
 
     @Override
@@ -84,10 +101,9 @@ public class login_activity extends AppCompatActivity {
     public void signIn(){
         if(validate()) {
             String email = etEmail.getText().toString();
-            if (sqlite_db.isExistsUser(email)) {
+            if (user_dao.isExistsUser(email)) {
                 final server_request request = new server_request(3, this);
-                request.set_server_url("http://192.168.43.101/request/HealthCareServer.php");
-                //request.set_server_url("http://10.0.2.2/request/HealthCareServer.php");
+                request.set_server_url(constants.server_url);
                 request.setParams("SIGN_IN", "PROCESS");
                 request.setParams(etEmail.getText().toString(), "EMAIL");
                 request.setParams(etPassword.getText().toString(), "PASSWORD");
@@ -107,7 +123,7 @@ public class login_activity extends AppCompatActivity {
                     @Override
                     public void onFinish() {
                         response_data_process(request);
-                        Log.i(TAG, "Fucking here onFinish is reach");
+                        Log.i(constants.TAG, "Fucking here onFinish is reach");
                         pd.dismiss();
                     }
 
@@ -132,7 +148,7 @@ public class login_activity extends AppCompatActivity {
                 Toast.makeText(this, "Incorrect password or email address", Toast.LENGTH_LONG).show();
             }else if(response.equals("1")){
                 String email = etEmail.getText().toString();
-                sqlite_db.login_detail_update(email,"1");
+                user_dao.update(new user(email,1));
                 Intent i = new Intent(this,home_activity.class);
                 i.putExtra("EMAIL_ADDRESS",email);
                 startActivity(i);
@@ -150,6 +166,7 @@ public class login_activity extends AppCompatActivity {
         etEmail = (EditText) findViewById(R.id.etEmail);
         lnkSignUp = (TextView) findViewById(R.id.lnkSignUp);
         etPassword = (EditText) findViewById(R.id.etPassword);
-        sqlite_db = new database(this,"Health_Care",null,1);
+        sqlite_db = new database(this,constants.database_name,null,1);
+        user_dao = new userDAO(this,sqlite_db.getDatabase());
     }
 }

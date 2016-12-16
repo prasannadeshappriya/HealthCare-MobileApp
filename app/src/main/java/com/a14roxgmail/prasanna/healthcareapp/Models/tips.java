@@ -1,4 +1,4 @@
-package com.a14roxgmail.prasanna.healthcareapp.ListView;
+package com.a14roxgmail.prasanna.healthcareapp.Models;
 
 /**
  * Created by Prasanna Deshappriya on 12/7/2016.

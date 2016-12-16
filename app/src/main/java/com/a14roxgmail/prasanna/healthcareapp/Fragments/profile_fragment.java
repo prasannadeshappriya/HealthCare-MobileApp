@@ -43,7 +43,6 @@ public class profile_fragment extends Fragment {
     }
 
     public void back_btn_click(View view){
-        Toast.makeText(getContext(),String.valueOf(etName.isEnabled()),Toast.LENGTH_LONG).show();
         if(!etName.isEnabled()){
             etName.setEnabled(true);
             etAddress.setEnabled(true);

@@ -1,18 +1,23 @@
-package com.a14roxgmail.prasanna.healthcareapp;
+package com.a14roxgmail.prasanna.healthcareapp.UI;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.a14roxgmail.prasanna.healthcareapp.DAO.userDAO;
 import com.a14roxgmail.prasanna.healthcareapp.Database.database;
-import com.android.volley.NoConnectionError;
+import com.a14roxgmail.prasanna.healthcareapp.Models.user;
+import com.a14roxgmail.prasanna.healthcareapp.R;
+import com.a14roxgmail.prasanna.healthcareapp.constants;
+import com.a14roxgmail.prasanna.healthcareapp.server_request;
 
 import org.json.JSONException;
 
@@ -27,8 +32,8 @@ public class signup_activity extends AppCompatActivity {
     private EditText etPassword;
     private EditText etRePassword;
 
+    private userDAO user_dao;
     private database sqlite_db;
-    private final String TAG = "TAG";
 
     public void init(){
         lnkSignin = (TextView) findViewById(R.id.lnkSignIn);
@@ -39,7 +44,8 @@ public class signup_activity extends AppCompatActivity {
         etPhone = (EditText) findViewById(R.id.etMobile);
         etPassword = (EditText) findViewById(R.id.etSuPassword);
         etRePassword =(EditText) findViewById(R.id.etRePassword);
-        sqlite_db = new database(this,"Health_Care",null,1);
+        sqlite_db = new database(this,constants.database_name,null,1);
+        user_dao = new userDAO(this,sqlite_db.getDatabase());
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,14 +77,47 @@ public class signup_activity extends AppCompatActivity {
     }
 
     public boolean validate(){
-        return true;
+        //validation process
+        boolean con = true;
+        if(!Patterns.EMAIL_ADDRESS.matcher(etEmail.getText().toString()).matches()){
+            etEmail.setError("Email address is invalid");
+            con = false;
+        }
+        if(etName.getText().toString().equals("")){
+            etName.setError("Name cannot left blank");
+            con = false;
+        }
+        if(etAddress.getText().toString().equals("")){
+            etAddress.setError("Address cannot left blank");
+            con = false;
+        }
+        if(etEmail.getText().toString().equals("")){
+            etEmail.setError("Email address cannot left blank");
+            con = false;
+        }
+        if(etPhone.getText().toString().equals("")){
+            etPhone.setError("Phone number cannot left blank");
+            con = false;
+        }
+        if(etPassword.getText().length()<4){
+            etPassword.setError("Password should contain minimum 4 characters");
+            con=false;
+        }
+        if(!etPassword.getText().toString().equals(etRePassword.getText().toString())){
+            Toast.makeText(getApplicationContext(),"Passwords are not same",Toast.LENGTH_LONG).show();
+            con = false;
+        }
+        if(con){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     private void start_signup_process(){
         if(validate()){
             final server_request request = new server_request(6,this);
-            request.set_server_url("http://192.168.43.101/request/HealthCareServer.php");
-            //request.set_server_url("http://10.0.2.2/request/HealthCareServer.php");
+            request.set_server_url(constants.server_url);
             request.setParams("SIGN_UP","PROCESS");
             request.setParams(etName.getText().toString(),"NAME");
             request.setParams(etAddress.getText().toString(),"ADDRESS");
@@ -122,7 +161,7 @@ public class signup_activity extends AppCompatActivity {
             if (response.equals("Account successfully created")) {
                 Toast.makeText(this, response, Toast.LENGTH_LONG).show();
                 String email = etEmail.getText().toString();
-                sqlite_db.login_detail_insert(email);
+                user_dao.insert(new user(email,0));
                 Intent i = new Intent(this, login_activity.class);
                 i.putExtra("EMAIL_ADDRESS", email);
                 startActivity(i);

@@ -13,27 +13,26 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/etSearchDisease"
+            android:id="@+id/etSearchMReport"
             android:hint="Search"/>
     </android.support.design.widget.TextInputLayout>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="textEnd"
-        android:id="@+id/lnkAddDisease"
-        android:text="Add diseases"/>
+        android:id="@+id/lnkAddMReport"
+        android:text="Add medical report"/>
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/frmDiseaseModifyDialog">
+        android:id="@+id/frmMReportModifyDialog">
         <ListView
             android:paddingTop="15dp"
-            android:id="@+id/lstDisease"
+            android:id="@+id/lstMReport"
             android:layout_width="match_parent"
             android:dividerHeight="@dimen/activity_vertical_margin"
             android:divider="#00000000"
             android:layout_height="match_parent">
         </ListView>
     </FrameLayout>
-
 </LinearLayout>

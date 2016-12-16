@@ -22,7 +22,6 @@ import java.util.Map;
  * Created by Prasanna Deshappriya on 11/29/2016.
  */
 public class server_request extends AppCompatActivity {
-    final String TAG = "TAG";
     ArrayList<String> params;
     ArrayList<String> keys;
     String SERVER_URL = "";
@@ -57,7 +56,7 @@ public class server_request extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         setResponse_msg("Network is unreachable");
-                        Log.i(TAG,"ERROR OCCOURED DURING REQUEST :- "  + error.toString());
+                        Log.i(constants.TAG,"ERROR OCCOURED DURING REQUEST :- "  + error.toString());
                     }
                 })
         {
@@ -66,12 +65,12 @@ public class server_request extends AppCompatActivity {
                 Map<String,String> paramMap = new HashMap<>();
                 for(int i=0; i<params.size(); i++){
                     paramMap.put(keys.get(i),params.get(i));
-                    Log.i(TAG,keys.get(i) + "   " + params.get(i));
+                    Log.i(constants.TAG,keys.get(i) + "   " + params.get(i));
                 }
                 return paramMap;
             }
         };
-        request.setTag(TAG);
+        request.setTag(constants.TAG);
         requestQueue = Volley.newRequestQueue(activity);
         requestQueue.add(request);
         return getResponse();
@@ -81,6 +80,6 @@ public class server_request extends AppCompatActivity {
     public String getResponse(){return response_msg;}
 
     public void distroy(){
-        requestQueue.cancelAll(TAG);
+        requestQueue.cancelAll(constants.TAG);
     }
 }

@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.a14roxgmail.prasanna.healthcareapp.ListView.disease;
+import com.a14roxgmail.prasanna.healthcareapp.Models.disease;
 import com.a14roxgmail.prasanna.healthcareapp.R;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public class adapter_disease extends BaseAdapter {
 
     @Override
     public long getItemId(int i) {
-        return arrDisease.get(i).getID();
+        return arrDisease.get(i).getId();
     }
 
     @Override
@@ -44,10 +44,10 @@ public class adapter_disease extends BaseAdapter {
         TextView tvName = (TextView)v.findViewById(R.id.tvAdapterName);
         TextView tvDiscription = (TextView)v.findViewById(R.id.tvAdapterDescription);
         TextView tvTreatement = (TextView)v.findViewById(R.id.tvAdapterTreatment);
-        tvName.setText(arrDisease.get(i).getDisease());
+        tvName.setText(arrDisease.get(i).getName());
         tvDiscription.setText("Description: - " + arrDisease.get(i).getDescription());
         tvTreatement.setText("Treatment: - " + arrDisease.get(i).getTreatment());
-        v.setTag(arrDisease.get(i).getID());
+        v.setTag(arrDisease.get(i).getId());
         return v;
     }
 }

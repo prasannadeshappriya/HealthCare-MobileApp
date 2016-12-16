@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.a14roxgmail.prasanna.healthcareapp.ListView.tips;
+import com.a14roxgmail.prasanna.healthcareapp.Models.tips;
 import com.a14roxgmail.prasanna.healthcareapp.R;
 
 import java.util.List;

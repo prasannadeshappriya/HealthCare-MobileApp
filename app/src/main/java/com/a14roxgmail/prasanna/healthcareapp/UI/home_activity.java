@@ -1,11 +1,7 @@
-package com.a14roxgmail.prasanna.healthcareapp;
+package com.a14roxgmail.prasanna.healthcareapp.UI;
 
-import android.app.Activity;
-import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
@@ -18,9 +14,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import com.a14roxgmail.prasanna.healthcareapp.DAO.userDAO;
 import com.a14roxgmail.prasanna.healthcareapp.Database.database;
 import com.a14roxgmail.prasanna.healthcareapp.Fragments.*;
+import com.a14roxgmail.prasanna.healthcareapp.R;
 import com.a14roxgmail.prasanna.healthcareapp.Services.sync_service;
+import com.a14roxgmail.prasanna.healthcareapp.constants;
 
 public class home_activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -29,6 +29,7 @@ public class home_activity extends AppCompatActivity
     private NavigationView navigationView;
     private String signInEmail="";
     private database sqldb;
+    private userDAO user_dao;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,11 +44,12 @@ public class home_activity extends AppCompatActivity
         fragTrans.replace(R.id.frmMain,home);
         fragTrans.commit();
 
-        sqldb = new database(this,"Health_Care",null,1);
+        sqldb = new database(this, constants.database_name,null,1);
+        user_dao = new userDAO(this,sqldb.getDatabase());
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Log.i("TAG","startup");
+        Log.i(constants.TAG,"startup");
         Bundle emailParam = getIntent().getExtras();
         String email_crnt = emailParam.getString("EMAIL_ADDRESS");
         signInEmail = email_crnt;
@@ -149,8 +151,14 @@ public class home_activity extends AppCompatActivity
             FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
             fragTrans.replace(R.id.frmMain,profile);
             fragTrans.commit();
+        }else if (id == R.id.nav_medical_reoprts) {
+            toolbar.setTitle("Reports");
+            mreports_fragment report = new mreports_fragment();
+            FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
+            fragTrans.replace(R.id.frmMain,report);
+            fragTrans.commit();
         } else if (id == R.id.nav_signout) {
-            sqldb.login_data_signout(signInEmail);
+            user_dao.signout(signInEmail);
             Intent i = new Intent(this,login_activity.class);
             startActivity(i);
             this.finish();

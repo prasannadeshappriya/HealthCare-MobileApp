@@ -10,17 +10,17 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.a14roxgmail.prasanna.healthcareapp.Database.database;
+import com.a14roxgmail.prasanna.healthcareapp.constants;
 
 public class sync_service extends Service {
     private String message;
     private database sqlite_db;
-    final String TAG = "TAG";
 
     public sync_service() {}
 
     @Override
     public void onCreate() {
-        Log.i(TAG,"Service is started");
+        Log.i(constants.TAG,"Service is started");
         //open or create if it is not exist
         sqlite_db = new database(this,"Health_Care",null,1);
     }
@@ -29,7 +29,7 @@ public class sync_service extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Bundle args = intent.getExtras();
         message = args.getString("args");
-        Log.i(TAG, "Messages Successfully passed :- " + message);
+        Log.i(constants.TAG, "Messages Successfully passed :- " + message);
 
         Runnable r = new Runnable() {
             @Override
@@ -41,15 +41,15 @@ public class sync_service extends Service {
                                 // 0 - Mobile Data
                                 // 1 - Wifi
                             if (isNetworkAvailable(getApplicationContext(),arr)) {
-                                Log.i(TAG,"Internet Connection available");
+                                Log.i(constants.TAG,"Internet Connection available");
                                 //check is there any thing to upload to the server
                                 //if yes send the request to the server
                                 //save the status to the database
                             }else{
-                                Log.i(TAG,"No Internet Connection");
+                                Log.i(constants.TAG,"No Internet Connection");
                             }
                             wait(3000);
-                            Log.i(TAG, "Service is working");
+                            Log.i(constants.TAG, "Service is working");
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -66,7 +66,7 @@ public class sync_service extends Service {
 
     @Override
     public void onDestroy() {
-        Log.i(TAG,"Service is Destroying");
+        Log.i(constants.TAG,"Service is Destroying");
     }
 
     @Override
