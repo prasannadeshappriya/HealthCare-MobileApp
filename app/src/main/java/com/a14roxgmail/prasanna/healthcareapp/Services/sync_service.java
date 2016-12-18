@@ -59,7 +59,7 @@ public class sync_service extends Service {
         };
 
         Thread t1 = new Thread(r);
-        t1.start();
+        //t1.start();
 
         return START_STICKY;
     }

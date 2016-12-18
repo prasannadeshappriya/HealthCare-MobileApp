@@ -78,7 +78,7 @@ public class patients_fragment extends Fragment {
             etSearch.setEnabled(false);
             //open modify fragment (replacing the list context)
             mdf = new modify_data_fragment();
-            mdf.setFields("Name","Nic","City","Update");
+            mdf.setFields("Name","Nic","City","Update","patient");
             mdf.setFieldValues(p.getName(),p.getNic(),p.getCity());
             FragmentTransaction trans = getFragmentManager().beginTransaction();
             trans.replace(R.id.frmPatientModifyDialog,mdf);
@@ -96,7 +96,7 @@ public class patients_fragment extends Fragment {
 
     private void show_modify_data_fragment() {
         mdf = new modify_data_fragment();
-        mdf.setFields("Name","Nic","City","Insert");
+        mdf.setFields("Name","Nic","City","Insert","patient");
         FragmentTransaction trans = getFragmentManager().beginTransaction();
         trans.replace(R.id.frmPatientModifyDialog,mdf);
         trans.commit();

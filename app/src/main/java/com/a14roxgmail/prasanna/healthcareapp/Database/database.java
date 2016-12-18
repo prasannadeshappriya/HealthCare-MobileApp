@@ -22,10 +22,19 @@ public class database extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        command = "CREATE TABLE login_detail" + "(" +
+        command = "CREATE TABLE IF NOT EXISTS login_detail" + "(" +
                 "ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "email VARCHAR(25), " +
                 "status INTEGER);";
+        Log.i(constants.TAG,command);
+        sqLiteDatabase.execSQL(command);
+
+        command = "CREATE TABLE IF NOT EXISTS disease" + "(" +
+                "disease_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "disease_name VARCHAR(50), " +
+                "description VARCHAR(255), " +
+                "treatment VARCHAR(255), " +
+                "sync_status INTEGER);";
         Log.i(constants.TAG,command);
         sqLiteDatabase.execSQL(command);
     }

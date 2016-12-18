@@ -1,6 +1,7 @@
 package com.a14roxgmail.prasanna.healthcareapp.Fragments;
 
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.a14roxgmail.prasanna.healthcareapp.DAO.diseaseDAO;
+import com.a14roxgmail.prasanna.healthcareapp.Database.database;
+import com.a14roxgmail.prasanna.healthcareapp.Models.disease;
 import com.a14roxgmail.prasanna.healthcareapp.R;
 import com.a14roxgmail.prasanna.healthcareapp.constants;
 
@@ -22,6 +26,8 @@ public class modify_data_fragment extends Fragment {
     private String field2;
     private String field3;
     private String field4;
+    private String modal_name;
+    private String type;
 
     private EditText etField1;
     private EditText etField2;
@@ -32,6 +38,7 @@ public class modify_data_fragment extends Fragment {
     private String field2_value;
     private String field3_value;
 
+    database sqlite_db;
     boolean setText = false;
 
     @Nullable
@@ -39,7 +46,33 @@ public class modify_data_fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_modify_data,container,false);
         init(v);
+        btnField4.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(varify()){
+                            start_process();
+                        }
+                    }
+                }
+        );
         return v;
+    }
+
+    public boolean varify(){
+        return true;
+    }
+
+    private void start_process() {
+        sqlite_db = new database(getContext(),constants.database_name,null,1);
+        if(type.equals("Insert")){
+            diseaseDAO disease_dao = new diseaseDAO(getContext(),sqlite_db.getDatabase());
+            disease_dao.addDisease(new disease(
+                    etField1.getText().toString(),
+                    etField2.toString().toString(),
+                    etField3.getText().toString(),
+                    constants.OFFLINE_FLAG));
+        }
     }
 
     private void init(View view) {
@@ -71,12 +104,9 @@ public class modify_data_fragment extends Fragment {
     }
 
     public void setFields(String field1, String field2,String field3,
-                          String field4){
-        this.field1 = field1;
-        this.field2 = field2;
-        this.field3 = field3;
-        this.field4 = field4;
-
-
+                          String field4, String model_name){
+        this.field1 = field1; this.field2 = field2;
+        this.field3 = field3; this.field4 = field4;
+        this.type = field4; this.modal_name = model_name;
     }
 }

@@ -21,6 +21,7 @@ import com.a14roxgmail.prasanna.healthcareapp.constants;
 import com.a14roxgmail.prasanna.healthcareapp.server_request;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 public class login_activity extends AppCompatActivity {
     private Button btnSignIn;
@@ -101,12 +102,11 @@ public class login_activity extends AppCompatActivity {
     public void signIn(){
         if(validate()) {
             String email = etEmail.getText().toString();
-            if (user_dao.isExistsUser(email)) {
                 final server_request request = new server_request(3, this);
                 request.set_server_url(constants.server_url);
                 request.setParams("SIGN_IN", "PROCESS");
-                request.setParams(etEmail.getText().toString(), "EMAIL");
-                request.setParams(etPassword.getText().toString(), "PASSWORD");
+                request.setParams(etEmail.getText().toString(), "email");
+                request.setParams(etPassword.getText().toString(), "password");
                 try {
                     String req = request.sendRequest();
 
@@ -123,7 +123,7 @@ public class login_activity extends AppCompatActivity {
                     @Override
                     public void onFinish() {
                         response_data_process(request);
-                        Log.i(constants.TAG, "Fucking here onFinish is reach");
+                        Log.i(constants.TAG, "OnFinish method triggered");
                         pd.dismiss();
                     }
 
@@ -133,9 +133,6 @@ public class login_activity extends AppCompatActivity {
                 };
                 timer.start();
 
-            } else {
-                Toast.makeText(this, "Email address is not exists", Toast.LENGTH_LONG).show();
-            }
         }
     }
 
@@ -144,20 +141,35 @@ public class login_activity extends AppCompatActivity {
         if(response.equals("")) {
             Toast.makeText(this, "Server timeout", Toast.LENGTH_LONG).show();
         }else{
-            if(response.equals("0")){
-                Toast.makeText(this, "Incorrect password or email address", Toast.LENGTH_LONG).show();
-            }else if(response.equals("1")){
-                String email = etEmail.getText().toString();
-                user_dao.update(new user(email,1));
-                Intent i = new Intent(this,home_activity.class);
-                i.putExtra("EMAIL_ADDRESS",email);
-                startActivity(i);
-                this.finish();
-                overridePendingTransition(R.anim.left_in,R.anim.left_out);
-            }else{
-                Toast.makeText(this, response, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),response,Toast.LENGTH_LONG).show();
+            try {
+                Log.i(constants.TAG,"Server Response :- " + response);
+                JSONObject objResponse = new JSONObject(response);
+                String server_auth = objResponse.getString("status");
+                if (server_auth.equals("success")){
+                    //get the token send by the server
+                    String token = objResponse.getString("token");
+                    constants.setToken(token);
+                    Log.i(constants.TAG,"token :- " + token);
+                    //input email address
+                    String email = etEmail.getText().toString();
+                    //check the email address with the sqlite database
+                    if (!user_dao.isExistsUser(email)) {
+                        user_dao.update(new user(email,1)); //update the sqlite database with the new email,
+                                                            // if the email is not exist on the embedded database
+                    }
+                    Intent i = new Intent(this,home_activity.class);
+                    i.putExtra("EMAIL_ADDRESS",email);startActivity(i);
+                    this.finish();
+                    overridePendingTransition(R.anim.left_in,R.anim.left_out);
+                }else{
+                    Toast.makeText(this, "Invalid login details", Toast.LENGTH_LONG).show();
+                }
+            } catch (JSONException e) {
+                Toast.makeText(this, "Jason Error while connecting to the server", Toast.LENGTH_LONG).show();
+                Log.i(constants.TAG,"Jason Error :- " + e.toString());
+                e.printStackTrace();
             }
-
         }
     }
 
