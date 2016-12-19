@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -56,6 +57,7 @@ public class signup_activity extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        Log.i(constants.TAG,constants.getToken());
                         start_signin_activity();
                     }
                 }
@@ -117,7 +119,7 @@ public class signup_activity extends AppCompatActivity {
     private void start_signup_process(){
         if(validate()){
             final server_request request = new server_request(6,this);
-            request.set_server_url(constants.server_url);
+            request.set_server_url(constants.server_login_url);
             request.setParams("SIGN_UP","PROCESS");
             request.setParams(etName.getText().toString(),"NAME");
             request.setParams(etAddress.getText().toString(),"ADDRESS");
@@ -125,7 +127,7 @@ public class signup_activity extends AppCompatActivity {
             request.setParams(etPhone.getText().toString(),"PHONE");
             request.setParams(etPassword.getText().toString(),"PASSWORD");
             try {
-                String req = request.sendRequest();
+                String req = request.sendPostRequest();
             } catch (JSONException e) {
                 e.printStackTrace();
             }

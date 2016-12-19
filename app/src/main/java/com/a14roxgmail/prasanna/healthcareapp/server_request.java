@@ -1,6 +1,7 @@
 package com.a14roxgmail.prasanna.healthcareapp;
 
 import android.app.Activity;
+import android.app.DownloadManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -29,6 +30,10 @@ public class server_request extends AppCompatActivity {
     String response_msg = "";
     Activity activity;
 
+    public server_request(Activity activity){
+        this.activity = activity;
+    }
+
     public server_request(int arg_count, Activity activity){
         params = new ArrayList<String>(arg_count);
         keys = new ArrayList<String>(arg_count);
@@ -44,7 +49,7 @@ public class server_request extends AppCompatActivity {
         keys.add(key);
     }
 
-    public String sendRequest() throws JSONException{
+    public String sendPostRequest() throws JSONException{
         StringRequest request = new StringRequest(Request.Method.POST, SERVER_URL,
                 new Response.Listener<String>() {
                     @Override
@@ -81,5 +86,37 @@ public class server_request extends AppCompatActivity {
 
     public void distroy(){
         requestQueue.cancelAll(constants.TAG);
+    }
+
+    public String sendGetRequest(HashMap<String,String> args){
+        String param = "?";
+        for(String key:args.keySet()){
+            if (param.equals("?")) {
+                param += key + "=" + args.get(key);
+            }else{
+                param += "&" + key + "=" + args.get(key);
+            }
+        }
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(activity);
+        String url = constants.server_disease_search_url + param;
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        setResponse_msg(response);
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        setResponse_msg("Network is unreachable");
+                        Log.i(constants.TAG,error.toString());
+                    }
+                });
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
+        return getResponse();
     }
 }

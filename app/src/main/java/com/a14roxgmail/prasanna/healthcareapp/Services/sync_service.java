@@ -37,10 +37,7 @@ public class sync_service extends Service {
                 while (true) {
                     synchronized (this) {
                         try {
-                            int[] arr = {0,1};
-                                // 0 - Mobile Data
-                                // 1 - Wifi
-                            if (isNetworkAvailable(getApplicationContext(),arr)) {
+                            if (isNetworkAvailable(getApplicationContext(),constants.Internet_Array)) {
                                 Log.i(constants.TAG,"Internet Connection available");
                                 //check is there any thing to upload to the server
                                 //if yes send the request to the server

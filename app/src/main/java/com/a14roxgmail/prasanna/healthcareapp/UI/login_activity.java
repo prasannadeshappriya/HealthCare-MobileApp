@@ -101,38 +101,34 @@ public class login_activity extends AppCompatActivity {
 
     public void signIn(){
         if(validate()) {
-            String email = etEmail.getText().toString();
-                final server_request request = new server_request(3, this);
-                request.set_server_url(constants.server_url);
-                request.setParams("SIGN_IN", "PROCESS");
-                request.setParams(etEmail.getText().toString(), "email");
-                request.setParams(etPassword.getText().toString(), "password");
-                try {
-                    String req = request.sendRequest();
+            final server_request request = new server_request(3, this);
+            request.set_server_url(constants.server_login_url);
+            request.setParams("SIGN_IN", "PROCESS");
+            request.setParams(etEmail.getText().toString(), "email");
+            request.setParams(etPassword.getText().toString(), "password");
+            try {
+                String req = request.sendPostRequest();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
+            final ProgressDialog pd = new ProgressDialog(this, R.style.AppTheme_Dark_Dialog);
+            pd.setIndeterminate(true);
+            pd.setMessage("Authenticating..");
+            pd.show();
+
+            CountDownTimer timer = new CountDownTimer(2000, 1000) {
+                @Override
+                public void onFinish() {
+                    response_data_process(request);
+                    Log.i(constants.TAG, "OnFinish method triggered");
+                    pd.dismiss();
                 }
 
-                final ProgressDialog pd = new ProgressDialog(this, R.style.AppTheme_Dark_Dialog);
-                pd.setIndeterminate(true);
-                pd.setMessage("Authenticating..");
-                pd.show();
-
-                CountDownTimer timer = new CountDownTimer(2000, 1000) {
-                    @Override
-                    public void onFinish() {
-                        response_data_process(request);
-                        Log.i(constants.TAG, "OnFinish method triggered");
-                        pd.dismiss();
-                    }
-
-                    @Override
-                    public void onTick(long millisLeft) {
-                    }
-                };
-                timer.start();
-
+                @Override
+                public void onTick(long millisLeft) {}
+            };
+            timer.start();
         }
     }
 
@@ -141,7 +137,6 @@ public class login_activity extends AppCompatActivity {
         if(response.equals("")) {
             Toast.makeText(this, "Server timeout", Toast.LENGTH_LONG).show();
         }else{
-            Toast.makeText(getApplicationContext(),response,Toast.LENGTH_LONG).show();
             try {
                 Log.i(constants.TAG,"Server Response :- " + response);
                 JSONObject objResponse = new JSONObject(response);
@@ -155,7 +150,7 @@ public class login_activity extends AppCompatActivity {
                     String email = etEmail.getText().toString();
                     //check the email address with the sqlite database
                     if (!user_dao.isExistsUser(email)) {
-                        user_dao.update(new user(email,1)); //update the sqlite database with the new email,
+                        user_dao.insert(new user(email,1)); //insert the  new email to the sqlite database,
                                                             // if the email is not exist on the embedded database
                     }
                     Intent i = new Intent(this,home_activity.class);
