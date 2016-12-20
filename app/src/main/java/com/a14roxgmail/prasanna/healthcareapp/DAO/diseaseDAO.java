@@ -12,7 +12,6 @@ import com.a14roxgmail.prasanna.healthcareapp.Models.disease;
 import com.a14roxgmail.prasanna.healthcareapp.constants;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**

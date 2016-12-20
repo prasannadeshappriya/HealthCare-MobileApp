@@ -14,10 +14,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.a14roxgmail.prasanna.healthcareapp.DAO.districtDAO;
 import com.a14roxgmail.prasanna.healthcareapp.DAO.userDAO;
 import com.a14roxgmail.prasanna.healthcareapp.Database.database;
-import com.a14roxgmail.prasanna.healthcareapp.Models.district;
 import com.a14roxgmail.prasanna.healthcareapp.Models.user;
 import com.a14roxgmail.prasanna.healthcareapp.R;
 import com.a14roxgmail.prasanna.healthcareapp.constants;
@@ -60,11 +58,19 @@ public class signup_activity extends AppCompatActivity {
         String[] items; //items for the dropdown list
         ArrayAdapter<String> adapter; //adapter for dropdown lists
         items = new String[]{"patient", "Health Officer", "Medical Officer"};
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, items);
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
         lstRole.setAdapter(adapter);
 
-        items = new String[]{"Colombo", "Gampaha", "Kandy", "Matale", "Nuwara Eliya","Hambantota" ,"Badulla"};
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, items);
+        items = new String[]{
+                "Ampara", "Anuradhapura", "Badulla", "Batticaloa",
+                "Colombo", "Galle", "Gampaha", "Hambantota",
+                "Jaffna", "Kalutara", "Kandy", "Kegalle",
+                "Kilinochchi", "Kurunegala", "Mannar", "Matale",
+                "Matara", "Monaragala", "Mullaitivu", "Nuwara Eliya",
+                "Polonnaruwa", "Puttalam", "Ratnapura", "Trincomalee",
+                "Vavuniya"
+        };
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
         lstDistrict.setAdapter(adapter);
     }
     @Override
@@ -142,17 +148,7 @@ public class signup_activity extends AppCompatActivity {
     private void start_signup_process(){
         if(validate()){
             final server_request request = new server_request(8,this);
-            String role = lstRole.getSelectedItem().toString();
-            if(role.equals("patient")){
-                Log.i(constants.TAG,"Role is patient");
-                request.set_server_url(constants.server_signup_patient_url);
-            }else if(role.equals("Health Officer")){
-                Log.i(constants.TAG,"Role is health officer");
-                request.set_server_url(constants.server_signup_health_officer_url);
-            }else if(role.equals("Medical Officer")){
-                Log.i(constants.TAG,"Role is medical officer");
-                request.set_server_url(constants.server_signup_medical_officer_url);
-            }
+            request.set_server_url(constants.server_signup__url);
 
             request.setParams(etName.getText().toString(),"name");
             request.setParams(etDateOfBirth.getText().toString(),"dob");
@@ -223,7 +219,18 @@ public class signup_activity extends AppCompatActivity {
                                     nic,
                                     String.valueOf(lstDistrict.getSelectedItemId()+1)
                             );
+                        }else if (user.getString("role").equals("health_officer")) {
+                            //Create health_officer
+
+
+
+                        }if (user.getString("role").equals("medical_officer")) {
+                            //create medical officer
+
+
+
                         }
+
                         //open login activity
                         //jason object and the nic number will be send with the intend
                         Intent i = new Intent(this, login_activity.class);

@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.a14roxgmail.prasanna.healthcareapp.DAO.districtDAO;
 import com.a14roxgmail.prasanna.healthcareapp.DAO.userDAO;
 import com.a14roxgmail.prasanna.healthcareapp.Database.database;
 import com.a14roxgmail.prasanna.healthcareapp.Models.user;
@@ -22,8 +23,6 @@ import com.a14roxgmail.prasanna.healthcareapp.token;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Date;
 
 public class login_activity extends AppCompatActivity {
     private Button btnSignIn;
@@ -116,7 +115,7 @@ public class login_activity extends AppCompatActivity {
         if(validate()) {
             final server_request request = new server_request(2, this);
             request.set_server_url(constants.server_login_url);
-            request.setParams(etNic.getText().toString(), "email");     //should changed to nic
+            request.setParams(etNic.getText().toString(), "nic");
             request.setParams(etPassword.getText().toString(), "password");
             try {
                 String req = request.sendPostRequest();
@@ -159,18 +158,19 @@ public class login_activity extends AppCompatActivity {
                     token.setTokenNumber(token_number);
                     Log.i(constants.TAG,"Token :- " + token.getTokenNumber());
 
-                    //input email address
+                    //input nic address
                     String nic = etNic.getText().toString();
 
-                    //check the email address with the sqlite database
+                    //check the nic address with the sqlite database
                     if (!user_dao.isExistsUser(nic)) {
-                        user_dao.insert(new user(nic,1)); //insert the  new email to the sqlite database,
-                                                            // if the email is not exist on the embedded database
+                        user_dao.insert(new user(nic,1)); //insert the  new nic to the sqlite database,
+                                                            // if the nic is not exist on the embedded database
                     }
 
                     Intent i = new Intent(this,home_activity.class);
-                    //should put jason respond as an bundle extra
-                    i.putExtra("NIC",nic);startActivity(i);
+                    JSONObject objUser = new JSONObject(objResponse.getString("user"));
+                    i.putExtra("user",objUser.toString());
+                    startActivity(i);
                     this.finish();
                     overridePendingTransition(R.anim.left_in,R.anim.left_out);
                 }else{
@@ -192,5 +192,8 @@ public class login_activity extends AppCompatActivity {
         etPassword = (EditText) findViewById(R.id.etPassword);
         sqlite_db = new database(this,constants.database_name,null,1);
         user_dao = new userDAO(this,sqlite_db.getDatabase());
+
+        districtDAO district_dao = new districtDAO(getApplicationContext(),sqlite_db.getDatabase());
+        district_dao.init();
     }
 }

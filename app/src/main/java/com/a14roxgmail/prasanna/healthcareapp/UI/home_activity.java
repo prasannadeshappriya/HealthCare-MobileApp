@@ -22,6 +22,9 @@ import com.a14roxgmail.prasanna.healthcareapp.R;
 import com.a14roxgmail.prasanna.healthcareapp.Services.sync_service;
 import com.a14roxgmail.prasanna.healthcareapp.constants;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class home_activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private TextView tvEmail;
@@ -50,9 +53,13 @@ public class home_activity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         Log.i(constants.TAG,"startup");
-        Bundle nicParam = getIntent().getExtras();
-        String nic = nicParam.getString("NIC");
-        signInNic = nic;
+        Bundle Param = getIntent().getExtras();
+        try {
+            JSONObject objUser = new JSONObject(Param.getString("user"));
+            signInNic = objUser.getString("nic");
+        } catch (JSONException e) {
+            Log.i(constants.TAG,"Error while passing JSONObject [" + e.toString() + "]");
+        }
 
         /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

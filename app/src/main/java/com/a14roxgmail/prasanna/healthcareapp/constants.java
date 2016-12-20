@@ -14,9 +14,7 @@ public class constants {
     //server urls
     public static final String server_login_url = "http://" + server_host_ip + "/login";
     public static final String server_disease_search_url = "http://" + server_host_ip + "/diseases/search";
-    public static final String server_signup_patient_url = "http://" + server_host_ip + "/signup";
-    public static final String server_signup_health_officer_url = "http://" + server_host_ip + "/healthofficers";
-    public static final String server_signup_medical_officer_url = "http://" + server_host_ip + "/medicalofficers";
+    public static final String server_signup__url = "http://" + server_host_ip + "/signup";
 
     //php localhost server --------------------------------------------------------------------------------------------------
     //public static final String server_url = "http://192.168.43.101/request/HealthCareServer.php";
