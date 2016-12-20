@@ -27,7 +27,7 @@ public class home_activity extends AppCompatActivity
     private TextView tvEmail;
     private Toolbar toolbar;
     private NavigationView navigationView;
-    private String signInEmail="";
+    private String signInNic ="";
     private database sqldb;
     private userDAO user_dao;
     @Override
@@ -51,8 +51,8 @@ public class home_activity extends AppCompatActivity
 
         Log.i(constants.TAG,"startup");
         Bundle emailParam = getIntent().getExtras();
-        String email_crnt = emailParam.getString("EMAIL_ADDRESS");
-        signInEmail = email_crnt;
+        String nic = emailParam.getString("NIC");
+        signInNic = nic;
 
         /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -76,7 +76,7 @@ public class home_activity extends AppCompatActivity
 
         View header = navigationView.getHeaderView(0);
         tvEmail = (TextView)header.findViewById(R.id.tvEmail);
-        tvEmail.setText(signInEmail);
+        tvEmail.setText(signInNic);
 
 
 
@@ -158,7 +158,7 @@ public class home_activity extends AppCompatActivity
             fragTrans.replace(R.id.frmMain,report);
             fragTrans.commit();
         } else if (id == R.id.nav_signout) {
-            user_dao.signout(signInEmail);
+            user_dao.signout(signInNic);
             Intent i = new Intent(this,login_activity.class);
             startActivity(i);
             this.finish();

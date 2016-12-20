@@ -33,10 +33,10 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/etAddress"
+                android:id="@+id/etDateOfBirth"
                 android:drawableLeft="@drawable/ic_action_address"
-                android:inputType="textPostalAddress"
-                android:hint="Address"/>
+                android:inputType="date"
+                android:hint="Date of Birth (DD:MM:YYYY)"/>
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -46,15 +46,26 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/etEmail"
+                android:id="@+id/etNic"
                 android:drawableLeft="@drawable/ic_action_email"
-                android:inputType="textEmailAddress"
-                android:hint="Email"/>
+                android:inputType="text"
+                android:hint="NIC"/>
         </android.support.design.widget.TextInputLayout>
+
+        <Spinner
+            android:id="@+id/lstDistrict"
+            android:layout_marginTop="15dip"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="10dp"
+            android:background="@android:color/darker_gray"/>
 
         <android.support.design.widget.TextInputLayout
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dip"
             android:layout_width="match_parent">
             <EditText
                 android:layout_width="match_parent"
@@ -65,9 +76,20 @@
                 android:hint="Phone"/>
         </android.support.design.widget.TextInputLayout>
 
+        <Spinner
+            android:id="@+id/lstRole"
+            android:layout_marginTop="15dip"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="10dp"
+            android:background="@android:color/darker_gray"/>
+
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_marginTop="10dip"
             android:layout_height="wrap_content">
             <EditText
                 android:layout_width="match_parent"

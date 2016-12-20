@@ -25,7 +25,7 @@ import org.json.JSONObject;
 
 public class login_activity extends AppCompatActivity {
     private Button btnSignIn;
-    private EditText etEmail;
+    private EditText etNic;
     private EditText etPassword;
     private TextView lnkSignUp;
 
@@ -44,16 +44,16 @@ public class login_activity extends AppCompatActivity {
         if (!autoLogIn.equals("")) {
             Intent i = new Intent(this, home_activity.class);
             Log.i(constants.TAG, "Fucking insert :- " + autoLogIn);
-            i.putExtra("EMAIL_ADDRESS", autoLogIn);
+            i.putExtra("NIC", autoLogIn);
             startActivity(i);
             this.finish();
         }
 
 
-        Bundle emailParam = getIntent().getExtras();
-        if(emailParam!=null){
-            String emailParameter = emailParam.getString("EMAIL_ADDRESS");
-            etEmail.setText(emailParameter);
+        Bundle nicParam = getIntent().getExtras();
+        if(nicParam!=null){
+            String nicParamater = nicParam.getString("NIC");
+            etNic.setText(nicParamater);
             etPassword.requestFocus();
         }
 
@@ -81,10 +81,17 @@ public class login_activity extends AppCompatActivity {
         overridePendingTransition(R.anim.left_in,R.anim.left_out);
     }
 
+    public boolean nic_Validate(String nic){
+        return true;
+    }
+
     private boolean validate(){
         boolean con = true;
-        if(!Patterns.EMAIL_ADDRESS.matcher(etEmail.getText()).matches()){
-            etEmail.setError("Email address is invalid");
+        if(!nic_Validate(etNic.getText().toString())){
+            etNic.setError("NIC number is invalid");
+            con = false;
+        }
+        if(etNic.getText().toString().equals("")){
             con = false;
         }
         if(con) {
@@ -101,10 +108,9 @@ public class login_activity extends AppCompatActivity {
 
     public void signIn(){
         if(validate()) {
-            final server_request request = new server_request(3, this);
+            final server_request request = new server_request(2, this);
             request.set_server_url(constants.server_login_url);
-            request.setParams("SIGN_IN", "PROCESS");
-            request.setParams(etEmail.getText().toString(), "email");
+            request.setParams(etNic.getText().toString(), "email");     //should changed to nic
             request.setParams(etPassword.getText().toString(), "password");
             try {
                 String req = request.sendPostRequest();
@@ -147,7 +153,7 @@ public class login_activity extends AppCompatActivity {
                     constants.setToken(token);
                     Log.i(constants.TAG,"token :- " + token);
                     //input email address
-                    String email = etEmail.getText().toString();
+                    String email = etNic.getText().toString();
                     //check the email address with the sqlite database
                     if (!user_dao.isExistsUser(email)) {
                         user_dao.insert(new user(email,1)); //insert the  new email to the sqlite database,
@@ -170,7 +176,7 @@ public class login_activity extends AppCompatActivity {
 
     public void init(){
         btnSignIn = (Button) findViewById(R.id.btnSignIn);
-        etEmail = (EditText) findViewById(R.id.etEmail);
+        etNic = (EditText) findViewById(R.id.etLoginNic);
         lnkSignUp = (TextView) findViewById(R.id.lnkSignUp);
         etPassword = (EditText) findViewById(R.id.etPassword);
         sqlite_db = new database(this,constants.database_name,null,1);

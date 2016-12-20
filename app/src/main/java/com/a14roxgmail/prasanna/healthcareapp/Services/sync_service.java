@@ -42,6 +42,7 @@ public class sync_service extends Service {
                                 //check is there any thing to upload to the server
                                 //if yes send the request to the server
                                 //save the status to the database
+
                             }else{
                                 Log.i(constants.TAG,"No Internet Connection");
                             }
