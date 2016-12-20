@@ -4,44 +4,48 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.icu.text.SimpleDateFormat;
 import android.util.Log;
 
+import com.a14roxgmail.prasanna.healthcareapp.Models.patient;
 import com.a14roxgmail.prasanna.healthcareapp.Models.user;
 import com.a14roxgmail.prasanna.healthcareapp.constants;
+
+import java.util.Date;
 
 /**
  * Created by Prasanna Deshappriya on 12/16/2016.
  */
 public class userDAO extends DAO {
-    private String name = "login_detail";
-    private String description = "description";
-    private String treatment = "treatment";
     private SQLiteDatabase sqldb;
     private String command;
+    private Context context;
 
     public userDAO(Context context, SQLiteDatabase sqldb) {
         super();
         this.tableName = "login_detail";
         this.primaryKey = "id";
+        this.context = context;
         this.sqldb = sqldb;
     }
 
+    //update the user status
     public  void update(user user){
-        String email = user.getEmail();
+        String nic = user.getNic();
         int status = user.getStatus();
-        command = "UPDATE " + tableName + " SET status =\"" + status + "\" WHERE email =\"" + email + "\";";
+        command = "UPDATE " + tableName + " SET status =\"" + status + "\" WHERE nic =\"" + nic + "\";";
         Log.i(constants.TAG,command);
         sqldb.execSQL(command);
     }
 
-    public void signout(String email){
-        command = "UPDATE " + tableName + " SET status =\"0\" WHERE email =\"" + email + "\";";
+    public void signout(String nic){
+        command = "UPDATE " + tableName + " SET status =\"0\" WHERE nic =\"" + nic + "\";";
         Log.i(constants.TAG,command);
         sqldb.execSQL(command);
     }
 
-    public boolean isExistsUser(String email){
-        command = "SELECT * FROM " + tableName + " WHERE email=\"" + email + "\";";
+    public boolean isExistsUser(String nic){
+        command = "SELECT * FROM " + tableName + " WHERE nic=\"" + nic + "\";";
         Log.i(constants.TAG,command);
         Cursor c = sqldb.rawQuery(command,null);
         if(c.getCount()>0){
@@ -55,7 +59,7 @@ public class userDAO extends DAO {
     }
 
     public String checkAutoLogin(){
-        command = "SELECT email FROM " + tableName + " WHERE status=\"1\";";
+        command = "SELECT nic FROM " + tableName + " WHERE status=\"1\";";
         Log.i(constants.TAG,command);
         Cursor c = sqldb.rawQuery(command,null);
         c.moveToFirst();
@@ -67,11 +71,25 @@ public class userDAO extends DAO {
     }
 
     public void insert(user user){
-        String email = user.getEmail();
+        String nic = user.getNic();
         int status = user.getStatus();
         ContentValues cv = new ContentValues();
-        cv.put("email",email);
+        cv.put("nic",nic);
         cv.put("status",status);
         sqldb.insert(tableName,null,cv);
+    }
+
+    public void create_patient(String patient_name, String dob,String nic, String distrist_id){
+        patientDAO patient_dao = new patientDAO(context,sqldb);
+        String last_edit_date = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        patient_dao.addPatient(new patient(
+                patient_name,
+                nic,
+                dob,
+                distrist_id,
+                last_edit_date,
+                "0"
+        ));
+
     }
 }

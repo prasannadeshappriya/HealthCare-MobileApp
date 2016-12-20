@@ -6,7 +6,6 @@ import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,15 +18,19 @@ import com.a14roxgmail.prasanna.healthcareapp.Models.user;
 import com.a14roxgmail.prasanna.healthcareapp.R;
 import com.a14roxgmail.prasanna.healthcareapp.constants;
 import com.a14roxgmail.prasanna.healthcareapp.server_request;
+import com.a14roxgmail.prasanna.healthcareapp.token;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Date;
 
 public class login_activity extends AppCompatActivity {
     private Button btnSignIn;
     private EditText etNic;
     private EditText etPassword;
     private TextView lnkSignUp;
+    private String user_details; //to store the data send from the server
 
     private userDAO user_dao;
     private database sqlite_db;
@@ -39,23 +42,26 @@ public class login_activity extends AppCompatActivity {
 
         init();
 
-
+        //check if some user is already login
         String autoLogIn = user_dao.checkAutoLogin();
         if (!autoLogIn.equals("")) {
             Intent i = new Intent(this, home_activity.class);
-            Log.i(constants.TAG, "Fucking insert :- " + autoLogIn);
+            Log.i(constants.TAG, "Auto login account detected (autoLogId):- " + autoLogIn);
             i.putExtra("NIC", autoLogIn);
+            //should have to put jason respond as an bundle extra
             startActivity(i);
             this.finish();
         }
 
 
-        Bundle nicParam = getIntent().getExtras();
-        if(nicParam!=null){
-            String nicParamater = nicParam.getString("NIC");
+        Bundle Param = getIntent().getExtras();
+        if(Param!=null){
+            String nicParamater = Param.getString("NIC");
+            user_details = Param.getString("USER");
             etNic.setText(nicParamater);
             etPassword.requestFocus();
         }
+
 
         btnSignIn.setOnClickListener(
                 new View.OnClickListener() {
@@ -149,32 +155,37 @@ public class login_activity extends AppCompatActivity {
                 String server_auth = objResponse.getString("status");
                 if (server_auth.equals("success")){
                     //get the token send by the server
-                    String token = objResponse.getString("token");
-                    constants.setToken(token);
-                    Log.i(constants.TAG,"token :- " + token);
+                    String token_number = objResponse.getString("token");
+                    token.setTokenNumber(token_number);
+                    Log.i(constants.TAG,"Token :- " + token.getTokenNumber());
+
                     //input email address
-                    String email = etNic.getText().toString();
+                    String nic = etNic.getText().toString();
+
                     //check the email address with the sqlite database
-                    if (!user_dao.isExistsUser(email)) {
-                        user_dao.insert(new user(email,1)); //insert the  new email to the sqlite database,
+                    if (!user_dao.isExistsUser(nic)) {
+                        user_dao.insert(new user(nic,1)); //insert the  new email to the sqlite database,
                                                             // if the email is not exist on the embedded database
                     }
+
                     Intent i = new Intent(this,home_activity.class);
-                    i.putExtra("EMAIL_ADDRESS",email);startActivity(i);
+                    //should put jason respond as an bundle extra
+                    i.putExtra("NIC",nic);startActivity(i);
                     this.finish();
                     overridePendingTransition(R.anim.left_in,R.anim.left_out);
                 }else{
                     Toast.makeText(this, "Invalid login details", Toast.LENGTH_LONG).show();
                 }
             } catch (JSONException e) {
-                Toast.makeText(this, "Jason Error while connecting to the server", Toast.LENGTH_LONG).show();
-                Log.i(constants.TAG,"Jason Error :- " + e.toString());
+                Toast.makeText(this, "JSONE Error while connecting to the server", Toast.LENGTH_LONG).show();
+                Log.i(constants.TAG,"JSONE Error :- " + e.toString());
                 e.printStackTrace();
             }
         }
     }
 
     public void init(){
+        user_details = "";
         btnSignIn = (Button) findViewById(R.id.btnSignIn);
         etNic = (EditText) findViewById(R.id.etLoginNic);
         lnkSignUp = (TextView) findViewById(R.id.lnkSignUp);

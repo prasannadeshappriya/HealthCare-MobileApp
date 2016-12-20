@@ -50,8 +50,8 @@ public class home_activity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         Log.i(constants.TAG,"startup");
-        Bundle emailParam = getIntent().getExtras();
-        String nic = emailParam.getString("NIC");
+        Bundle nicParam = getIntent().getExtras();
+        String nic = nicParam.getString("NIC");
         signInNic = nic;
 
         /*

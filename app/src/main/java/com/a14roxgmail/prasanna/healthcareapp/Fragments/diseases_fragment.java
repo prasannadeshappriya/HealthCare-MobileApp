@@ -25,6 +25,7 @@ import com.a14roxgmail.prasanna.healthcareapp.R;
 import com.a14roxgmail.prasanna.healthcareapp.Services.sync_service;
 import com.a14roxgmail.prasanna.healthcareapp.constants;
 import com.a14roxgmail.prasanna.healthcareapp.server_request;
+import com.a14roxgmail.prasanna.healthcareapp.token;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -182,7 +183,7 @@ public class diseases_fragment extends Fragment  {
         final server_request request = new server_request(getActivity());
         HashMap<String,String> arr = new HashMap<String,String>();
         arr.put("name",etSearch.getText().toString());
-        arr.put("token",constants.FAKE_TAG);
+        arr.put("token", token.fake_token);
         request.sendGetRequest(arr);
         CountDownTimer timer = new CountDownTimer(300, 100) {
             @Override

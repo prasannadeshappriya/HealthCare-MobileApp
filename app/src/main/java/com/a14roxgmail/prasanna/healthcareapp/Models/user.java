@@ -4,20 +4,20 @@ package com.a14roxgmail.prasanna.healthcareapp.Models;
  * Created by Prasanna Deshappriya on 12/15/2016.
  */
 public class user {
-    private String email;
-    private int status; //to autologin process
+    private String nic;
+    private int status; //to auto login process
 
-    public user(String email, int status) {
-        this.email = email;
+    public user(String nic, int status) {
+        this.nic = nic;
         this.status = status;
     }
 
-    public String getEmail() {
-        return email;
+    public String getNic() {
+        return nic;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setNic(String email) {
+        this.nic = email;
     }
 
     public int getStatus() {

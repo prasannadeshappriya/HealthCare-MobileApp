@@ -38,14 +38,14 @@ public class diseaseDAO extends DAO{
         command = "SELECT * FROM "+tableName+" where 1";
         Cursor c = sqldb.rawQuery(command,null);
         //list to store data
-        List<disease> diseases = new ArrayList<disease>();
+        List<disease> diseases = new ArrayList<>();
         if(c.moveToFirst()) {
             do {
                 disease d = new disease(
-                        c.getString(c.getColumnIndex("disease_name")),
-                        c.getString(c.getColumnIndex("description")),
-                        c.getString(c.getColumnIndex("treatment")),
-                        c.getString(c.getColumnIndex("sync_status")));
+                        c.getString(c.getColumnIndex(name)),
+                        c.getString(c.getColumnIndex(description)),
+                        c.getString(c.getColumnIndex(treatment)),
+                        c.getString(c.getColumnIndex(sync_status)));
                 diseases.add(d);
             } while (c.moveToNext());
         }
@@ -60,14 +60,14 @@ public class diseaseDAO extends DAO{
                 "treatment LIKE \"%" + field + "%\";";
         Log.i(constants.TAG,command);
         Cursor c = sqldb.rawQuery(command,null);
-        List<disease> filter = new ArrayList<disease>();
+        List<disease> filter = new ArrayList<>();
         if(c.moveToFirst()){
             do{
                 disease d = new disease(
-                        c.getString(c.getColumnIndex("disease_name")),
-                        c.getString(c.getColumnIndex("description")),
-                        c.getString(c.getColumnIndex("treatment")),
-                        c.getString(c.getColumnIndex("sync_status")));
+                        c.getString(c.getColumnIndex(name)),
+                        c.getString(c.getColumnIndex(description)),
+                        c.getString(c.getColumnIndex(treatment)),
+                        c.getString(c.getColumnIndex(sync_status)));
                 filter.add(d);
             }while (c.moveToNext());
         }
@@ -75,16 +75,16 @@ public class diseaseDAO extends DAO{
     }
 
     public disease getDisease(String disease_name){
-        command = "SELECT * FROM "+tableName+" WHERE disease_name = " + disease_name;
+        command = "SELECT * FROM "+tableName+" WHERE disease_name = \"" + disease_name + "\";";
         Cursor c = sqldb.rawQuery(command,null);
         disease disease = null;
         if(c.moveToFirst()) {
             do {
                 disease = new disease(
-                        c.getString(c.getColumnIndex("disease_name")),
-                        c.getString(c.getColumnIndex("description")),
-                        c.getString(c.getColumnIndex("treatment")),
-                        c.getString(c.getColumnIndex("sync_status")));
+                        c.getString(c.getColumnIndex(name)),
+                        c.getString(c.getColumnIndex(description)),
+                        c.getString(c.getColumnIndex(treatment)),
+                        c.getString(c.getColumnIndex(sync_status)));
             } while (c.moveToNext());
         }
         return disease;

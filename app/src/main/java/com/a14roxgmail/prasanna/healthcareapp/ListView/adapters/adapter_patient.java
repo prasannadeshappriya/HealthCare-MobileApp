@@ -48,7 +48,7 @@ public class adapter_patient extends BaseAdapter {
 
         patient_name.setText(patient_list.get(i).getName());
         patient_NIC.setText("NIC:  " + patient_list.get(i).getNic());
-        patient_city.setText("City:  " + patient_list.get(i).getCity());
+        patient_city.setText("District:  " + patient_list.get(i).getDistrict_id());
 
         v.setTag(patient_list.get(i).getId());
         return v;

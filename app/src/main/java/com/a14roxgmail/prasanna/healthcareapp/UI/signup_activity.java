@@ -6,7 +6,6 @@ import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -15,12 +14,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.a14roxgmail.prasanna.healthcareapp.DAO.districtDAO;
 import com.a14roxgmail.prasanna.healthcareapp.DAO.userDAO;
 import com.a14roxgmail.prasanna.healthcareapp.Database.database;
+import com.a14roxgmail.prasanna.healthcareapp.Models.district;
 import com.a14roxgmail.prasanna.healthcareapp.Models.user;
 import com.a14roxgmail.prasanna.healthcareapp.R;
 import com.a14roxgmail.prasanna.healthcareapp.constants;
 import com.a14roxgmail.prasanna.healthcareapp.server_request;
+import com.a14roxgmail.prasanna.healthcareapp.token;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -75,7 +77,6 @@ public class signup_activity extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Log.i(constants.TAG,constants.getToken());
                         start_signin_activity();
                     }
                 }
@@ -155,7 +156,7 @@ public class signup_activity extends AppCompatActivity {
 
             request.setParams(etName.getText().toString(),"name");
             request.setParams(etDateOfBirth.getText().toString(),"dob");
-            request.setParams(constants.FAKE_TAG,"token");
+            request.setParams(token.fake_token,"token");
             request.setParams(String.valueOf(lstDistrict.getSelectedItemId()+1),"district_id");
             request.setParams(etNIC.getText().toString(),"nic");
             request.setParams(etPassword.getText().toString(),"password");
@@ -199,16 +200,43 @@ public class signup_activity extends AppCompatActivity {
             JSONObject objResponse = null;
             try {
                 objResponse = new JSONObject(response);
-                String message = "";
+                String message;
                 if(objResponse.isNull("error")){
-                    Toast.makeText(getApplicationContext(), "Account Successfully Created", Toast.LENGTH_LONG).show();
-                    String nic = etNIC.getText().toString();
-                    user_dao.insert(new user(nic,0));
-                    Intent i = new Intent(this, login_activity.class);
-                    i.putExtra("NIC", nic);
-                    startActivity(i);
-                    this.finish();
-                    overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                    if(objResponse.isNull("user")){
+                        //if the respond does not contain patient field
+                        Toast.makeText(getApplicationContext(), "Respond error :- Server respond does not contain 'patient' field", Toast.LENGTH_LONG).show();
+                    }else {
+                        Toast.makeText(getApplicationContext(), "Account Successfully Created", Toast.LENGTH_LONG).show();
+
+                        //create jason object for send to the other activities
+                        JSONObject user = new JSONObject(objResponse.getString("user"));
+
+                        //get the nic number and store it in the sqlite database
+                        String nic = etNIC.getText().toString();
+                        user_dao.insert(new user(nic, 0));
+
+                        if (user.getString("role").equals("patient")) {
+                            //Create patient
+                            user_dao.create_patient(
+                                    etName.getText().toString(),
+                                    etDateOfBirth.getText().toString(),
+                                    nic,
+                                    String.valueOf(lstDistrict.getSelectedItemId()+1)
+                            );
+                        }
+                        //open login activity
+                        //jason object and the nic number will be send with the intend
+                        Intent i = new Intent(this, login_activity.class);
+                        i.putExtra("USER",user.toString());
+                        i.putExtra("NIC", nic);
+                        startActivity(i);
+
+                        //close the signup activity
+                        this.finish();
+
+                        //apply animation when activity transaction
+                        overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                    }
                 }else{
                     message = objResponse.getString("error");
                     Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
@@ -217,17 +245,6 @@ public class signup_activity extends AppCompatActivity {
                 e.printStackTrace();
                 Log.i(constants.TAG,"Jason error :- " + e.toString());
             }
-
-
-/*
-            String nic = etNIC.getText().toString();
-            user_dao.insert(new user(nic,0));
-            Intent i = new Intent(this, login_activity.class);
-            i.putExtra("NIC", nic);
-            startActivity(i);
-            this.finish();
-            overridePendingTransition(R.anim.left_in, R.anim.left_out);
-            */
         }
     }
 }
