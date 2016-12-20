@@ -209,7 +209,7 @@ public class signup_activity extends AppCompatActivity {
 
                         //get the nic number and store it in the sqlite database
                         String nic = etNIC.getText().toString();
-                        user_dao.insert(new user(nic, 0));
+                        user_dao.insert(new user(nic, 0, lstRole.getSelectedItem().toString()));
 
                         if (user.getString("role").equals("patient")) {
                             //Create patient

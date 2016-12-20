@@ -160,6 +160,7 @@ public class home_activity extends AppCompatActivity
         }else if (id == R.id.nav_profile) {
             toolbar.setTitle("Profile");
             profile_fragment profile = new profile_fragment();
+            profile.setLoginId(signInNic);
             FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
             fragTrans.replace(R.id.frmMain,profile);
             fragTrans.commit();

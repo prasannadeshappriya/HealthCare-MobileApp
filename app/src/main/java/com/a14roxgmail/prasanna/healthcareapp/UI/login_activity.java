@@ -163,12 +163,12 @@ public class login_activity extends AppCompatActivity {
 
                     //check the nic address with the sqlite database
                     //if user exist in sqlite database return true
+                    JSONObject objUser = new JSONObject(objResponse.getString("user"));
                     if (user_dao.isExistsUser(nic)) {
-                        user_dao.update(new user(nic,1));
+                        user_dao.update(new user(nic,1,objUser.getString("role")));
                     }else{
-                        user_dao.insert(new user(nic,1)); //insert the  new nic to the sqlite database,
+                        user_dao.insert(new user(nic,1,objUser.getString("role"))); //insert the  new nic to the sqlite database,
                                                           // if the nic is not exist on the embedded database
-                        JSONObject objUser = new JSONObject(objResponse.getString("user"));
                         if(objUser.getString("role").equals("patient")){
                             Log.i(constants.TAG, "assdsad");
                             user_dao.create_patient(
@@ -183,7 +183,6 @@ public class login_activity extends AppCompatActivity {
                     }
 
                     Intent i = new Intent(this,home_activity.class);
-                    JSONObject objUser = new JSONObject(objResponse.getString("user"));
                     i.putExtra("user",objUser.toString());
                     this.finish();
                     startActivity(i);

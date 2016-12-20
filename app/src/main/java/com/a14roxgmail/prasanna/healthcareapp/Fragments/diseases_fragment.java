@@ -1,6 +1,8 @@
 package com.a14roxgmail.prasanna.healthcareapp.Fragments;
 
+import android.annotation.TargetApi;
 import android.app.ProgressDialog;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
@@ -31,6 +33,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -155,12 +163,12 @@ public class diseases_fragment extends Fragment  {
                     ,arr.get(count).getDescription()
                     ,arr.get(count).getTreatment()));
         }
+        lvDisease.setAdapter(null);
+        adapter = new adapter_disease(getContext(),lstDisease);
+        lvDisease.setAdapter(adapter);
         if (method.equals("init")) {
             if (sync_service.isNetworkAvailable(getContext(),constants.Internet_Array)) {
                 search_from_server();
-            }else{
-                adapter = new adapter_disease(getContext(),lstDisease);
-                lvDisease.setAdapter(adapter);
             }
         }
 
@@ -211,6 +219,7 @@ public class diseases_fragment extends Fragment  {
                         ,objResponse.getString("treatment")));
             }
             request = null;
+            lvDisease.setAdapter(null);
             adapter = new adapter_disease(getContext(),lstDisease);
             lvDisease.setAdapter(adapter);
 

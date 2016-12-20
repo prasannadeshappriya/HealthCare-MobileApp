@@ -108,6 +108,7 @@ public class patients_fragment extends Fragment {
                         ,objResponse.getString("district_id")));
             }
             request = null;
+            lstPatient.setAdapter(null);
             adapter = new adapter_patient(getContext(),patientList);
             lstPatient.setAdapter(adapter);
 
@@ -134,19 +135,12 @@ public class patients_fragment extends Fragment {
                     arr.get(count).getDistrict_id())
             );
         }
+        lstPatient.setAdapter(null);
+        adapter = new adapter_patient(getContext(), patientList);
+        lstPatient.setAdapter(adapter);
         if (method.equals("init")) {
             if (sync_service.isNetworkAvailable(getContext(), constants.Internet_Array)) {
                 search_from_server();
-            } else {
-                adapter = new adapter_patient(getContext(), patientList);
-                lstPatient.setAdapter(adapter);
-            }
-        }else{
-            if (sync_service.isNetworkAvailable(getContext(), constants.Internet_Array)) {
-                search_from_server();
-            } else {
-                adapter = new adapter_patient(getContext(), patientList);
-                lstPatient.setAdapter(adapter);
             }
         }
     }

@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.icu.text.SimpleDateFormat;
 import android.util.Log;
 
 import com.a14roxgmail.prasanna.healthcareapp.Models.patient;
@@ -23,7 +22,7 @@ public class userDAO extends DAO {
 
     public userDAO(Context context, SQLiteDatabase sqldb) {
         super();
-        this.tableName = "login_detail";
+        this.tableName = "user";
         this.primaryKey = "id";
         this.context = context;
         this.sqldb = sqldb;
@@ -73,9 +72,14 @@ public class userDAO extends DAO {
     public void insert(user user){
         String nic = user.getNic();
         int status = user.getStatus();
+        String role = user.getRole();
+        String spec = user.getSpecialization();
+
         ContentValues cv = new ContentValues();
         cv.put("nic",nic);
         cv.put("status",status);
+        cv.put("role",role);
+        cv.put("specialization",spec);
         sqldb.insert(tableName,null,cv);
     }
 
@@ -91,5 +95,21 @@ public class userDAO extends DAO {
                 flag
         ));
 
+    }
+
+    public user getUser(String nic){
+        command = "SELECT * FROM "+tableName+" WHERE nic = \"" + nic + "\";";
+        Cursor c = sqldb.rawQuery(command,null);
+        user user = null;
+        if(c.moveToFirst()) {
+            do {
+                user = new user(
+                        c.getString(c.getColumnIndex("nic")),
+                        Integer.parseInt(c.getString(c.getColumnIndex("status"))),
+                        c.getString(c.getColumnIndex("role")),
+                        c.getString(c.getColumnIndex("specialization")));
+            } while (c.moveToNext());
+        }
+        return user;
     }
 }

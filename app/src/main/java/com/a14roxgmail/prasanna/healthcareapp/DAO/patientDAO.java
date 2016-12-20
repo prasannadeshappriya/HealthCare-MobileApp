@@ -78,8 +78,8 @@ public class patientDAO extends DAO {
         return filter;
     }
 
-    public patient getPatient(String patient_name){
-        command = "SELECT * FROM "+tableName+" WHERE patient_name = \"" + patient_name + "\";";
+    public patient getPatient(String nic_number){
+        command = "SELECT * FROM "+tableName+" WHERE nic = \"" + nic_number + "\";";
         Cursor c = sqldb.rawQuery(command,null);
         patient patient = null;
         if(c.moveToFirst()) {

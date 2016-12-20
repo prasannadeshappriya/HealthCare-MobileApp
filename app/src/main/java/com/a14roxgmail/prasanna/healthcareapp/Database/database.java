@@ -22,9 +22,11 @@ public class database extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        command = "CREATE TABLE IF NOT EXISTS login_detail" + "(" +
+        command = "CREATE TABLE IF NOT EXISTS user" + "(" +
                 "ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "nic VARCHAR(25), " +
+                "role VARCHAR(25), " +
+                "specialization VARCHAR(255), " +
                 "status INTEGER);";
         Log.i(constants.TAG,command);
         sqLiteDatabase.execSQL(command);
