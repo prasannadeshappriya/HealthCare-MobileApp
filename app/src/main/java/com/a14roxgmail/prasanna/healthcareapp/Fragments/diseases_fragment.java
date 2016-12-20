@@ -162,9 +162,6 @@ public class diseases_fragment extends Fragment  {
                 adapter = new adapter_disease(getContext(),lstDisease);
                 lvDisease.setAdapter(adapter);
             }
-
-        }else{
-
         }
 
     }
@@ -180,11 +177,13 @@ public class diseases_fragment extends Fragment  {
 
 
     public void search_from_server(){
+        Log.i("TAG","FUCK FUCk FUC FCUk");
         final server_request request = new server_request(getActivity());
         HashMap<String,String> arr = new HashMap<String,String>();
         arr.put("name",etSearch.getText().toString());
         arr.put("token", token.fake_token);
-        request.sendGetRequest(arr);
+
+        request.sendGetRequest(arr,constants.server_disease_search_url);
         CountDownTimer timer = new CountDownTimer(300, 100) {
             @Override
             public void onFinish() {
@@ -211,6 +210,7 @@ public class diseases_fragment extends Fragment  {
                         ,objResponse.getString("description")
                         ,objResponse.getString("treatment")));
             }
+            request = null;
             adapter = new adapter_disease(getContext(),lstDisease);
             lvDisease.setAdapter(adapter);
 

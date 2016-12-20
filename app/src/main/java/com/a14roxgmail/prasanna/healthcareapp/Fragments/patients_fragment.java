@@ -1,24 +1,36 @@
 package com.a14roxgmail.prasanna.healthcareapp.Fragments;
 
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.a14roxgmail.prasanna.healthcareapp.DAO.patientDAO;
+import com.a14roxgmail.prasanna.healthcareapp.Database.database;
 import com.a14roxgmail.prasanna.healthcareapp.ListView.adapters.adapter_patient;
 import com.a14roxgmail.prasanna.healthcareapp.Models.patient;
 import com.a14roxgmail.prasanna.healthcareapp.R;
+import com.a14roxgmail.prasanna.healthcareapp.Services.sync_service;
 import com.a14roxgmail.prasanna.healthcareapp.constants;
+import com.a14roxgmail.prasanna.healthcareapp.server_request;
+import com.a14roxgmail.prasanna.healthcareapp.token;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -31,90 +43,26 @@ public class patients_fragment extends Fragment {
     private EditText etSearch;
     private modify_data_fragment mdf;
     private TextView lnkAddPatient;
+    private patientDAO patient_dao;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_patients,container,false);
         init(view);
-        add_itms_to_lst(view);
-
-        lnkAddPatient.setOnClickListener(
-                new View.OnClickListener() {
+        add_list_details("init");
+        etSearch.addTextChangedListener(
+                new TextWatcher() {
                     @Override
-                    public void onClick(View view) {
-                        if(lnkAddPatient.getText().equals("Add patient")) {
-                            lnkAddPatient.setText("Cancel");
-                            etSearch.setEnabled(false);
-                            show_modify_data_fragment();
-                        }else{
-                            lnkAddPatient.setText("Add patient");
-                            FragmentTransaction trans = getFragmentManager().beginTransaction();
-                            trans.remove(mdf);
-                            trans.commit();
-                            lstPatient.setVisibility(View.VISIBLE);
-                            etSearch.setEnabled(true);
-                        }
-                    }
-                }
-        );
-        lstPatient.setOnItemLongClickListener(
-                new AdapterView.OnItemLongClickListener() {
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
                     @Override
-                    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        on_long_press_listview(adapterView,view,i,l);
-                        return true;
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                        add_list_details("filter");
                     }
+                    @Override
+                    public void afterTextChanged(Editable editable) {}
                 }
         );
         return view;
-    }
-
-    private void on_long_press_listview(AdapterView<?> adapterView, View view, int i, long l) {
-        patient p = (patient) adapterView.getItemAtPosition(i);
-        Log.i(constants.TAG,"this should be the index :- " + i + "    " + l);
-        Log.i(constants.TAG, p.getName());
-        if(lnkAddPatient.getText().equals("Add patient")) {
-            lnkAddPatient.setText("Cancel");
-            etSearch.setEnabled(false);
-            //open modify fragment (replacing the list context)
-            mdf = new modify_data_fragment();
-            mdf.setFields("Name","Nic","City","Update","patient");
-            mdf.setFieldValues(p.getName(),p.getNic(),p.getDistrict_id());
-            FragmentTransaction trans = getFragmentManager().beginTransaction();
-            trans.replace(R.id.frmPatientModifyDialog,mdf);
-            trans.commit();
-            lstPatient.setVisibility(View.INVISIBLE);
-        }else{
-            lnkAddPatient.setText("Add patient");
-            FragmentTransaction trans = getFragmentManager().beginTransaction();
-            trans.remove(mdf);
-            trans.commit();
-            lstPatient.setVisibility(View.VISIBLE);
-            etSearch.setEnabled(true);
-        }
-    }
-
-    private void show_modify_data_fragment() {
-        mdf = new modify_data_fragment();
-        mdf.setFields("Name","Nic","City","Insert","patient");
-        FragmentTransaction trans = getFragmentManager().beginTransaction();
-        trans.replace(R.id.frmPatientModifyDialog,mdf);
-        trans.commit();
-        lstPatient.setVisibility(View.INVISIBLE);
-    }
-
-    private void add_itms_to_lst(View view) {
-        patientList.add(new patient("Ja-Ela","1","Prasanna Deshappriya", "942222467V"));
-        patientList.add(new patient("Kandana","1","Hiruni Kalanika", "947760203V"));
-        patientList.add(new patient("Kandy","1","Malaka Sandaruwan", "942411625V"));
-        patientList.add(new patient("Jeffna","1","Promodh Sudharaka", "942265485V"));
-        patientList.add(new patient("Mount-Lavinia","1","Asela Bandara", "9428752467V"));
-        patientList.add(new patient("Galle","1","Sandaru Perera", "654822467V"));
-        patientList.add(new patient("Polonnaruwa","1","Shammika Deshappriya", "942222467V"));
-        patientList.add(new patient("Kaluthara","1","Kevin Charles", "845562467V"));
-        patientList.add(new patient("Colombo","1","Ruwan Hettiarachchi", "745855467V"));
-        adapter = new adapter_patient(getContext(),patientList);
-        lstPatient.setAdapter(adapter);
     }
 
     public void init(View view){
@@ -122,6 +70,85 @@ public class patients_fragment extends Fragment {
         lstPatient = (ListView) view.findViewById(R.id.lstPatient);
         lnkAddPatient = (TextView)view.findViewById(R.id.lnkAddPatient);
         etSearch = (EditText) view.findViewById(R.id.etSearchPatient);
+        database sqldb = new database(getContext(),constants.database_name,null,1);
+        patient_dao = new patientDAO(getContext(),sqldb.getDatabase());
+    }
+
+    public void search_from_server(){
+        final server_request request = new server_request(getActivity());
+        HashMap<String,String> arr = new HashMap<String,String>();
+        arr.put("nic",etSearch.getText().toString());
+        arr.put("token", token.fake_token);
+        request.sendGetRequest(arr,constants.server_patient_search_url);
+        CountDownTimer timer = new CountDownTimer(300, 100) {
+            @Override
+            public void onFinish() {
+                response_data_process(request);
+                Log.i(constants.TAG, "OnFinish method triggered");
+            }
+
+            @Override
+            public void onTick(long millisLeft) {}
+        };
+        timer.start();
+    }
+
+    public  void response_data_process(server_request request){
+        Log.i(constants.TAG,"Final Respond :- " + request.getResponse());
+        try {
+            JSONArray itemArray = new JSONArray(request.getResponse());
+            int count = patientList.size();
+            for(int i=0; i<itemArray.length(); i++){
+                JSONObject objResponse = new JSONObject(itemArray.get(i).toString());
+                patientList.add(new patient(
+                        (count+1+i)
+                        ,objResponse.getString("name")
+                        ,objResponse.getString("nic")
+                        ,objResponse.getString("dob")
+                        ,objResponse.getString("district_id")));
+            }
+            request = null;
+            adapter = new adapter_patient(getContext(),patientList);
+            lstPatient.setAdapter(adapter);
+
+        } catch (JSONException e) {
+            Log.i(constants.TAG,"JasonError :- " + e.toString());
+            e.printStackTrace();
+        }
+    }
+
+    private void add_list_details(String method) {
+        List<patient> arr;
+        patientList.clear();
+        if (method.equals("init")) {
+            arr = patient_dao.getPatientList();
+        }else{
+            arr = patient_dao.filter(etSearch.getText().toString());
+        }
+        for(int count=0; count<arr.size();count++) {
+            patientList.add(new patient(
+                    (count + 1),
+                    arr.get(count).getName(),
+                    arr.get(count).getNic(),
+                    arr.get(count).getDate_of_birth(),
+                    arr.get(count).getDistrict_id())
+            );
+        }
+        if (method.equals("init")) {
+            if (sync_service.isNetworkAvailable(getContext(), constants.Internet_Array)) {
+                search_from_server();
+            } else {
+                adapter = new adapter_patient(getContext(), patientList);
+                lstPatient.setAdapter(adapter);
+            }
+        }else{
+            if (sync_service.isNetworkAvailable(getContext(), constants.Internet_Array)) {
+                search_from_server();
+            } else {
+                adapter = new adapter_patient(getContext(), patientList);
+                lstPatient.setAdapter(adapter);
+            }
+        }
     }
 }
 

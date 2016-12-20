@@ -17,8 +17,10 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.a14roxgmail.prasanna.healthcareapp.DAO.diseaseDAO;
+import com.a14roxgmail.prasanna.healthcareapp.DAO.patientDAO;
 import com.a14roxgmail.prasanna.healthcareapp.Database.database;
 import com.a14roxgmail.prasanna.healthcareapp.Models.disease;
+import com.a14roxgmail.prasanna.healthcareapp.Models.patient;
 import com.a14roxgmail.prasanna.healthcareapp.R;
 import com.a14roxgmail.prasanna.healthcareapp.constants;
 
@@ -70,31 +72,6 @@ public class modify_data_fragment extends Fragment {
         return true;
     }
 
-    private void start_process(View view) {
-        sqlite_db = new database(getContext(),constants.database_name,null,1);
-        diseaseDAO disease_dao = new diseaseDAO(getContext(), sqlite_db.getDatabase());
-        if(type.equals("Insert")) {
-            disease_dao.addDisease(new disease(
-                    etField1.getText().toString(),
-                    etField2.getText().toString(),
-                    etField3.getText().toString(),
-                    constants.OFFLINE_FLAG));
-            disease_frag.reset_list();
-            FragmentTransaction trans = getFragmentManager().beginTransaction();
-            trans.remove(this);
-            trans.commit();
-        }else if(type.equals("Update")){
-            disease_dao.updateDisease(
-                    etField1.getText().toString(),
-                    etField2.getText().toString(),
-                    etField3.getText().toString());
-            disease_frag.reset_list();
-            FragmentTransaction trans = getFragmentManager().beginTransaction();
-            trans.remove(this);
-            trans.commit();
-        }
-    }
-
     private void init(View view) {
         etField1 = (EditText)view.findViewById(R.id.editField1);
         etField2 = (EditText)view.findViewById(R.id.editField2);
@@ -143,5 +120,32 @@ public class modify_data_fragment extends Fragment {
         this.field1 = field1; this.field2 = field2;
         this.field3 = field3; this.field4 = field4;
         this.type = field4; this.modal_name = model_name;
+    }
+
+    private void start_process(View view) {
+        sqlite_db = new database(getContext(),constants.database_name,null,1);
+        if(class_name.equals("disease_fragment")) {
+            diseaseDAO disease_dao = new diseaseDAO(getContext(), sqlite_db.getDatabase());
+            if (type.equals("Insert")) {
+                disease_dao.addDisease(new disease(
+                        etField1.getText().toString(),
+                        etField2.getText().toString(),
+                        etField3.getText().toString(),
+                        constants.OFFLINE_FLAG));
+                disease_frag.reset_list();
+                FragmentTransaction trans = getFragmentManager().beginTransaction();
+                trans.remove(this);
+                trans.commit();
+            } else if (type.equals("Update")) {
+                disease_dao.updateDisease(
+                        etField1.getText().toString(),
+                        etField2.getText().toString(),
+                        etField3.getText().toString());
+                disease_frag.reset_list();
+                FragmentTransaction trans = getFragmentManager().beginTransaction();
+                trans.remove(this);
+                trans.commit();
+            }
+        }
     }
 }

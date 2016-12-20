@@ -33,7 +33,6 @@ public class patientDAO extends DAO {
         this.tableName = "patient";
         this.primaryKey = "patient_id";
         this.sqldb = sqldb;
-        sync_status = "0";
     }
 
     public List<patient> getPatientList() {
@@ -58,9 +57,9 @@ public class patientDAO extends DAO {
     }
 
     public List<patient> filter(String field){
-        command = "SELECT * FROM "+tableName+" NATURAL JOIN district WHERE " +
-                "patient_name LIKE \"%" + field + "%\" OR " +
-                "district_name LIKE \"%" + field + "%\";";
+        command = "SELECT * FROM "+tableName+" WHERE " +
+                "patient_name LIKE \"%" + field + "%\";";
+                //"district_name LIKE \"%" + field + "%\";";
         Log.i(constants.TAG,command);
         Cursor c = sqldb.rawQuery(command,null);
         List<patient> filter = new ArrayList<>();

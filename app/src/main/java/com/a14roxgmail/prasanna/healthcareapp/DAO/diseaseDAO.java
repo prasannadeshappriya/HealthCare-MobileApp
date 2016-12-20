@@ -30,7 +30,6 @@ public class diseaseDAO extends DAO{
         this.tableName = "disease";
         this.primaryKey = "disease_id";
         this.sqldb = sqldb;
-        sync_status = "0";
     }
 
     public List<disease> getDiseaseList() {

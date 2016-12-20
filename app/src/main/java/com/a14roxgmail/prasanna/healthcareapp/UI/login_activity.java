@@ -46,10 +46,10 @@ public class login_activity extends AppCompatActivity {
         if (!autoLogIn.equals("")) {
             Intent i = new Intent(this, home_activity.class);
             Log.i(constants.TAG, "Auto login account detected (autoLogId):- " + autoLogIn);
-            i.putExtra("NIC", autoLogIn);
+            i.putExtra("nic", autoLogIn);
             //should have to put jason respond as an bundle extra
-            startActivity(i);
             this.finish();
+            startActivity(i);
         }
 
 
@@ -162,16 +162,31 @@ public class login_activity extends AppCompatActivity {
                     String nic = etNic.getText().toString();
 
                     //check the nic address with the sqlite database
-                    if (!user_dao.isExistsUser(nic)) {
+                    //if user exist in sqlite database return true
+                    if (user_dao.isExistsUser(nic)) {
+                        user_dao.update(new user(nic,1));
+                    }else{
                         user_dao.insert(new user(nic,1)); //insert the  new nic to the sqlite database,
-                                                            // if the nic is not exist on the embedded database
+                                                          // if the nic is not exist on the embedded database
+                        JSONObject objUser = new JSONObject(objResponse.getString("user"));
+                        if(objUser.getString("role").equals("patient")){
+                            Log.i(constants.TAG, "assdsad");
+                            user_dao.create_patient(
+                                    objUser.getString("name"),
+                                    objUser.getString("dob"),
+                                    objUser.getString("nic"),
+                                    objUser.getString("district_id"),
+                                    "1"
+                            );
+                            Log.i(constants.TAG, "Anonimus user created");
+                        }
                     }
 
                     Intent i = new Intent(this,home_activity.class);
                     JSONObject objUser = new JSONObject(objResponse.getString("user"));
                     i.putExtra("user",objUser.toString());
-                    startActivity(i);
                     this.finish();
+                    startActivity(i);
                     overridePendingTransition(R.anim.left_in,R.anim.left_out);
                 }else{
                     Toast.makeText(this, "Invalid login details", Toast.LENGTH_LONG).show();

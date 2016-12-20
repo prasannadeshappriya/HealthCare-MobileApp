@@ -8,7 +8,7 @@ public class token {
     public static String token_number = "";
 
     //for test purposes only - fake token number
-    public static final String fake_token = "fk";
+    public static final String fake_token = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwibmljIjoiOTQyMjIyNDY3diJ9.gUMNfA0esi2Oeql4oezPrTAPvGSSb0Fjv-3MowXOvQM";
 
     //set the token number
     public static void setTokenNumber(String token_number){

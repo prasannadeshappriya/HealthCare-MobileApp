@@ -88,7 +88,7 @@ public class server_request extends AppCompatActivity {
         requestQueue.cancelAll(constants.TAG);
     }
 
-    public String sendGetRequest(HashMap<String,String> args){
+    public String sendGetRequest(HashMap<String,String> args, String server_url){
         String param = "?";
         for(String key:args.keySet()){
             if (param.equals("?")) {
@@ -99,7 +99,7 @@ public class server_request extends AppCompatActivity {
         }
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(activity);
-        String url = constants.server_disease_search_url + param;
+        String url = server_url + param;
 
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -117,6 +117,7 @@ public class server_request extends AppCompatActivity {
                 });
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
+        stringRequest.setTag(constants.TAG);
         return getResponse();
     }
 }

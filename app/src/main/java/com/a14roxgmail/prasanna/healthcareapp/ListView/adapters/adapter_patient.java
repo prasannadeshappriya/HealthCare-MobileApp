@@ -44,11 +44,15 @@ public class adapter_patient extends BaseAdapter {
 
         TextView patient_name = (TextView) v.findViewById(R.id.tvAdapterName);
         TextView patient_NIC = (TextView) v.findViewById(R.id.tvAdapterNIC);
-        TextView patient_city = (TextView) v.findViewById(R.id.tvAdapterCity);
+        TextView patient_role = (TextView) v.findViewById(R.id.tvAdapterRole);
+        TextView patient_dob = (TextView) v.findViewById(R.id.tvAdapterDob);
+        TextView patient_district = (TextView) v.findViewById(R.id.tvAdapterDistrict);
 
         patient_name.setText(patient_list.get(i).getName());
         patient_NIC.setText("NIC:  " + patient_list.get(i).getNic());
-        patient_city.setText("District:  " + patient_list.get(i).getDistrict_id());
+        patient_role.setText("Role:  " + "Available soon");
+        patient_dob.setText("Date of Birth:  " + patient_list.get(i).getDate_of_birth());
+        patient_district.setText("District:  " + patient_list.get(i).getDistrict_id());
 
         v.setTag(patient_list.get(i).getId());
         return v;

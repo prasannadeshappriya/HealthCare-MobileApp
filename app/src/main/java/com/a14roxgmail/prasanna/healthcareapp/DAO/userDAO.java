@@ -79,7 +79,7 @@ public class userDAO extends DAO {
         sqldb.insert(tableName,null,cv);
     }
 
-    public void create_patient(String patient_name, String dob,String nic, String distrist_id){
+    public void create_patient(String patient_name, String dob,String nic, String distrist_id, String flag){
         patientDAO patient_dao = new patientDAO(context,sqldb);
         String last_edit_date = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new Date());
         patient_dao.addPatient(new patient(
@@ -88,7 +88,7 @@ public class userDAO extends DAO {
                 dob,
                 distrist_id,
                 last_edit_date,
-                "0"
+                flag
         ));
 
     }

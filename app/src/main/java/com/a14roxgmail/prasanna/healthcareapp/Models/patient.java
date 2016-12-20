@@ -19,6 +19,14 @@ public class patient {
         this.nic = nic;
     }
 
+    public patient(int id, String name, String nic, String date_of_birth, String district_id) {
+        this.date_of_birth = date_of_birth;
+        this.district_id = district_id;
+        this.name = name;
+        this.nic = nic;
+        this.id = id;
+    }
+
     public patient(String name, String nic, String date_of_birth, String district_id, String last_edit_date, String flag) {
         this.date_of_birth = date_of_birth;
         this.district_id = district_id;

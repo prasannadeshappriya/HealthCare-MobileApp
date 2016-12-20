@@ -54,12 +54,17 @@ public class home_activity extends AppCompatActivity
 
         Log.i(constants.TAG,"startup");
         Bundle Param = getIntent().getExtras();
-        try {
-            JSONObject objUser = new JSONObject(Param.getString("user"));
-            signInNic = objUser.getString("nic");
-        } catch (JSONException e) {
-            Log.i(constants.TAG,"Error while passing JSONObject [" + e.toString() + "]");
+        if(Param.getString("user")==null){
+            signInNic = Param.getString("nic");
+        }else{
+            try {
+                JSONObject objUser = new JSONObject(Param.getString("user"));
+                signInNic = objUser.getString("nic");
+            } catch (JSONException e) {
+                Log.i(constants.TAG,"Error while passing JSONObject [" + e.toString() + "]");
+            }
         }
+
 
         /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

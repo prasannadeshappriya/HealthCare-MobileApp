@@ -217,7 +217,8 @@ public class signup_activity extends AppCompatActivity {
                                     etName.getText().toString(),
                                     etDateOfBirth.getText().toString(),
                                     nic,
-                                    String.valueOf(lstDistrict.getSelectedItemId()+1)
+                                    String.valueOf(lstDistrict.getSelectedItemId()+1),
+                                    "0"
                             );
                         }else if (user.getString("role").equals("health_officer")) {
                             //Create health_officer

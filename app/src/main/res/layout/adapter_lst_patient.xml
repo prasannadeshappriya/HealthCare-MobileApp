@@ -30,8 +30,20 @@
 
     <TextView
         android:layout_width="wrap_content"
-        android:text="City: ?"
-        android:id="@+id/tvAdapterCity"
+        android:text="Role: ?"
+        android:id="@+id/tvAdapterRole"
+        android:paddingLeft="40dp"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="Date of Birth: ?"
+        android:id="@+id/tvAdapterDob"
+        android:paddingLeft="40dp"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="District: ?"
+        android:id="@+id/tvAdapterDistrict"
         android:paddingLeft="40dp"
         android:layout_height="wrap_content" />
 
