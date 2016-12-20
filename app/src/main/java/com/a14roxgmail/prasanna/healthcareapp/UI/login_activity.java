@@ -46,7 +46,7 @@ public class login_activity extends AppCompatActivity {
         if (!autoLogIn.equals("")) {
             Intent i = new Intent(this, home_activity.class);
             Log.i(constants.TAG, "Auto login account detected (autoLogId):- " + autoLogIn);
-            i.putExtra("nic", autoLogIn);
+            i.putExtra("nic", autoLogIn.toUpperCase());
             //should have to put jason respond as an bundle extra
             this.finish();
             startActivity(i);
@@ -57,7 +57,7 @@ public class login_activity extends AppCompatActivity {
         if(Param!=null){
             String nicParamater = Param.getString("NIC");
             user_details = Param.getString("USER");
-            etNic.setText(nicParamater);
+            etNic.setText(nicParamater.toUpperCase());
             etPassword.requestFocus();
         }
 
@@ -164,21 +164,38 @@ public class login_activity extends AppCompatActivity {
                     //check the nic address with the sqlite database
                     //if user exist in sqlite database return true
                     JSONObject objUser = new JSONObject(objResponse.getString("user"));
-                    if (user_dao.isExistsUser(nic)) {
-                        user_dao.update(new user(nic,1,objUser.getString("role")));
+                    if (user_dao.isExistsUser(nic.toUpperCase())) {
+                        user_dao.update(new user(nic.toUpperCase(),1,objUser.getString("role")));
                     }else{
-                        user_dao.insert(new user(nic,1,objUser.getString("role"))); //insert the  new nic to the sqlite database,
+                        user_dao.insert(new user(nic.toUpperCase(),1,objUser.getString("role"))); //insert the  new nic to the sqlite database,
                                                           // if the nic is not exist on the embedded database
                         if(objUser.getString("role").equals("patient")){
-                            Log.i(constants.TAG, "assdsad");
                             user_dao.create_patient(
                                     objUser.getString("name"),
                                     objUser.getString("dob"),
-                                    objUser.getString("nic"),
+                                    objUser.getString("nic").toUpperCase(),
                                     objUser.getString("district_id"),
                                     "1"
                             );
-                            Log.i(constants.TAG, "Anonimus user created");
+                            Log.i(constants.TAG, "Anonimus patient user created");
+                        } else if(objUser.getString("role").equals("health_officer")){
+                            user_dao.create_health_officer(
+                                    objUser.getString("name"),
+                                    objUser.getString("dob"),
+                                    objUser.getString("nic").toUpperCase(),
+                                    objUser.getString("district_id"),
+                                    "1"
+                            );
+                            Log.i(constants.TAG, "Anonimus health_officer user created");
+                        }else if(objUser.getString("role").equals("medical_officer")){
+                            user_dao.create_medical_officer(
+                                    objUser.getString("name"),
+                                    objUser.getString("dob"),
+                                    objUser.getString("nic").toUpperCase(),
+                                    objUser.getString("district_id"),
+                                    "1"
+                            );
+                            Log.i(constants.TAG, "Anonimus medical_officer user created");
                         }
                     }
 

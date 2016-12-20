@@ -156,7 +156,7 @@ public class signup_activity extends AppCompatActivity {
             request.setParams(String.valueOf(lstDistrict.getSelectedItemId()+1),"district_id");
             request.setParams(etNIC.getText().toString(),"nic");
             request.setParams(etPassword.getText().toString(),"password");
-            request.setParams(lstRole.getSelectedItem().toString(),"role");
+            request.setParams(lstRole.getSelectedItem().toString().toLowerCase().replace(" ","_"),"role");
             request.setParams(etPhone.getText().toString(),"phone");
             try {
                 String req = request.sendPostRequest();
@@ -209,25 +209,35 @@ public class signup_activity extends AppCompatActivity {
 
                         //get the nic number and store it in the sqlite database
                         String nic = etNIC.getText().toString();
-                        user_dao.insert(new user(nic, 0, lstRole.getSelectedItem().toString()));
+                        user_dao.insert(new user(nic.toUpperCase(), 0, lstRole.getSelectedItem().toString().toLowerCase().replace(" ","_")));
 
                         if (user.getString("role").equals("patient")) {
                             //Create patient
                             user_dao.create_patient(
                                     etName.getText().toString(),
                                     etDateOfBirth.getText().toString(),
-                                    nic,
+                                    nic.toUpperCase(),
                                     String.valueOf(lstDistrict.getSelectedItemId()+1),
                                     "0"
                             );
                         }else if (user.getString("role").equals("health_officer")) {
                             //Create health_officer
-
-
-
+                            user_dao.create_health_officer(
+                                    etName.getText().toString(),
+                                    etDateOfBirth.getText().toString(),
+                                    nic.toUpperCase(),
+                                    String.valueOf(lstDistrict.getSelectedItemId()+1),
+                                    "0"
+                            );
                         }if (user.getString("role").equals("medical_officer")) {
                             //create medical officer
-
+                            user_dao.create_medical_officer(
+                                    etName.getText().toString(),
+                                    etDateOfBirth.getText().toString(),
+                                    nic.toUpperCase(),
+                                    String.valueOf(lstDistrict.getSelectedItemId()+1),
+                                    "0"
+                            );
 
 
                         }
@@ -236,7 +246,7 @@ public class signup_activity extends AppCompatActivity {
                         //jason object and the nic number will be send with the intend
                         Intent i = new Intent(this, login_activity.class);
                         i.putExtra("USER",user.toString());
-                        i.putExtra("NIC", nic);
+                        i.putExtra("NIC", nic.toUpperCase());
                         startActivity(i);
 
                         //close the signup activity

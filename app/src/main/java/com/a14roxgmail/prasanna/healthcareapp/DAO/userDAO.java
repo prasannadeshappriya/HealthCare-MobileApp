@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.a14roxgmail.prasanna.healthcareapp.Models.health_officer;
+import com.a14roxgmail.prasanna.healthcareapp.Models.medical_officer;
 import com.a14roxgmail.prasanna.healthcareapp.Models.patient;
 import com.a14roxgmail.prasanna.healthcareapp.Models.user;
 import com.a14roxgmail.prasanna.healthcareapp.constants;
@@ -88,6 +90,34 @@ public class userDAO extends DAO {
         String last_edit_date = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new Date());
         patient_dao.addPatient(new patient(
                 patient_name,
+                nic,
+                dob,
+                distrist_id,
+                last_edit_date,
+                flag
+        ));
+
+    }
+
+    public void create_medical_officer(String medical_officer_name, String dob,String nic, String distrist_id, String flag){
+        medical_officerDAO medical_officer_dao = new medical_officerDAO(context,sqldb);
+        String last_edit_date = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        medical_officer_dao.addMedicalOfficer(new medical_officer(
+                medical_officer_name,
+                nic,
+                dob,
+                distrist_id,
+                last_edit_date,
+                flag
+        ));
+
+    }
+
+    public void create_health_officer(String health_officer_name, String dob,String nic, String distrist_id, String flag){
+        health_officerDAO health_officer_dao = new health_officerDAO(context,sqldb);
+        String last_edit_date = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        health_officer_dao.addHealthOfficer(new health_officer(
+                health_officer_name,
                 nic,
                 dob,
                 distrist_id,

@@ -13,9 +13,13 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.a14roxgmail.prasanna.healthcareapp.DAO.health_officerDAO;
+import com.a14roxgmail.prasanna.healthcareapp.DAO.medical_officerDAO;
 import com.a14roxgmail.prasanna.healthcareapp.DAO.patientDAO;
 import com.a14roxgmail.prasanna.healthcareapp.DAO.userDAO;
 import com.a14roxgmail.prasanna.healthcareapp.Database.database;
+import com.a14roxgmail.prasanna.healthcareapp.Models.health_officer;
+import com.a14roxgmail.prasanna.healthcareapp.Models.medical_officer;
 import com.a14roxgmail.prasanna.healthcareapp.Models.patient;
 import com.a14roxgmail.prasanna.healthcareapp.Models.user;
 import com.a14roxgmail.prasanna.healthcareapp.R;
@@ -34,6 +38,8 @@ public class profile_fragment extends Fragment {
     private EditText etRole;
     private Button btnBack;
     private patientDAO patient_dao;
+    private medical_officerDAO medical_officer_dao;
+    private health_officerDAO health_officer_dao;
     private userDAO user_dao;
     private database sqlite_db;
 
@@ -58,17 +64,32 @@ public class profile_fragment extends Fragment {
     }
 
     public void setLoginId(String nic){
-        this.nic = nic;
+        this.nic = nic.toUpperCase();
     }
 
     private void set_data(){
         user user = user_dao.getUser(nic);
+
         if(user.getRole().toString().equals("patient")){
             patient patient = patient_dao.getPatient(nic);
             etNic.setText(nic);
             etName.setText(patient.getName());
             etRole.setText(user.getRole());
             etDob.setText(patient.getDate_of_birth());
+            lstDistrict.setSelection(1);
+        } else if(user.getRole().toString().equals("medical_officer")){
+            medical_officer medical_officer = medical_officer_dao.getMedicalOfficer(nic);
+            etNic.setText(nic);
+            etName.setText(medical_officer.getName());
+            etRole.setText(user.getRole());
+            etDob.setText(medical_officer.getDate_of_birth());
+            lstDistrict.setSelection(1);
+        }else if(user.getRole().toString().equals("health_officer")){
+            health_officer health_officer = health_officer_dao.getHealthOfficer(nic);
+            etNic.setText(nic);
+            etName.setText(health_officer.getName());
+            etRole.setText(user.getRole());
+            etDob.setText(health_officer.getDate_of_birth());
             lstDistrict.setSelection(1);
         }
     }
@@ -123,5 +144,7 @@ public class profile_fragment extends Fragment {
         sqlite_db = new database(getContext(), constants.database_name,null,1);
         patient_dao = new patientDAO(getContext(),sqlite_db.getDatabase());
         user_dao = new userDAO(getContext(),sqlite_db.getDatabase());
+        health_officer_dao = new health_officerDAO(getContext(),sqlite_db.getDatabase());
+        medical_officer_dao = new medical_officerDAO(getContext(),sqlite_db.getDatabase());
     }
 }

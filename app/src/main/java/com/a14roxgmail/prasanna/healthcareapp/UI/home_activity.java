@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.a14roxgmail.prasanna.healthcareapp.DAO.userDAO;
 import com.a14roxgmail.prasanna.healthcareapp.Database.database;
 import com.a14roxgmail.prasanna.healthcareapp.Fragments.*;
+import com.a14roxgmail.prasanna.healthcareapp.Models.user;
 import com.a14roxgmail.prasanna.healthcareapp.R;
 import com.a14roxgmail.prasanna.healthcareapp.Services.sync_service;
 import com.a14roxgmail.prasanna.healthcareapp.constants;
@@ -31,6 +32,7 @@ public class home_activity extends AppCompatActivity
     private Toolbar toolbar;
     private NavigationView navigationView;
     private String signInNic ="";
+    private String role = "";
     private database sqldb;
     private userDAO user_dao;
     @Override
@@ -52,20 +54,6 @@ public class home_activity extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Log.i(constants.TAG,"startup");
-        Bundle Param = getIntent().getExtras();
-        if(Param.getString("user")==null){
-            signInNic = Param.getString("nic");
-        }else{
-            try {
-                JSONObject objUser = new JSONObject(Param.getString("user"));
-                signInNic = objUser.getString("nic");
-            } catch (JSONException e) {
-                Log.i(constants.TAG,"Error while passing JSONObject [" + e.toString() + "]");
-            }
-        }
-
-
         /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -86,12 +74,40 @@ public class home_activity extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        Log.i(constants.TAG,"startup");
+        Bundle Param = getIntent().getExtras();
+        Menu item = navigationView.getMenu();
+        if(Param.getString("user")==null){
+            signInNic = Param.getString("nic");
+            user user = user_dao.getUser(signInNic);
+            if(user.getRole().toString().equals("patient")){
+                item.findItem(R.id.nav_patient).setVisible(false);
+            }else if(user.getRole().toString().equals("medical_officer")){
+                item.findItem(R.id.nav_patient).setVisible(true);
+            }else if(user.getRole().toString().equals("health_officer")){
+                item.findItem(R.id.nav_patient).setVisible(true);
+            }
+        }else{
+            try {
+                JSONObject objUser = new JSONObject(Param.getString("user"));
+                signInNic = objUser.getString("nic");
+                role = objUser.getString("role");
+                if(role.equals("patient")){
+                    item.findItem(R.id.nav_patient).setVisible(false);
+                }else if(role.equals("medical_officer")){
+                    item.findItem(R.id.nav_patient).setVisible(true);
+                }else if(role.equals("health_officer")){
+                    item.findItem(R.id.nav_patient).setVisible(true);
+                }
+
+            } catch (JSONException e) {
+                Log.i(constants.TAG,"Error while passing JSONObject [" + e.toString() + "]");
+            }
+        }
+
         View header = navigationView.getHeaderView(0);
         tvEmail = (TextView)header.findViewById(R.id.tvEmail);
         tvEmail.setText(signInNic);
-
-
-
     }
 
     @Override
@@ -148,6 +164,7 @@ public class home_activity extends AppCompatActivity
         } else if (id == R.id.nav_diseases) {
             toolbar.setTitle("Diseases");
             diseases_fragment diseases = new diseases_fragment();
+            diseases.setNic(signInNic);
             FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
             fragTrans.replace(R.id.frmMain,diseases);
             fragTrans.commit();
@@ -181,4 +198,5 @@ public class home_activity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 }

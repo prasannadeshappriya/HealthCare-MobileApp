@@ -78,7 +78,7 @@ public class patients_fragment extends Fragment {
         final server_request request = new server_request(getActivity());
         HashMap<String,String> arr = new HashMap<String,String>();
         arr.put("nic",etSearch.getText().toString());
-        arr.put("token", token.fake_token);
+        arr.put("token", token.getTokenNumber());
         request.sendGetRequest(arr,constants.server_patient_search_url);
         CountDownTimer timer = new CountDownTimer(300, 100) {
             @Override

@@ -18,11 +18,14 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.a14roxgmail.prasanna.healthcareapp.DAO.diseaseDAO;
+import com.a14roxgmail.prasanna.healthcareapp.DAO.userDAO;
 import com.a14roxgmail.prasanna.healthcareapp.Database.database;
 import com.a14roxgmail.prasanna.healthcareapp.ListView.adapters.adapter_disease;
 import com.a14roxgmail.prasanna.healthcareapp.Models.disease;
+import com.a14roxgmail.prasanna.healthcareapp.Models.user;
 import com.a14roxgmail.prasanna.healthcareapp.R;
 import com.a14roxgmail.prasanna.healthcareapp.Services.sync_service;
 import com.a14roxgmail.prasanna.healthcareapp.constants;
@@ -54,6 +57,8 @@ public class diseases_fragment extends Fragment  {
     private ListView lvDisease;
     private EditText etSearch;
     private diseaseDAO disease_dao;
+    private String nic;
+    private userDAO user_dao;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -128,6 +133,10 @@ public class diseases_fragment extends Fragment  {
 
     }
 
+    public void setNic(String nic){
+        this.nic = nic;
+    }
+
     private void show_modify_data_fragment() {
         mdf = new modify_data_fragment();
         mdf.setFields("Disease","Description","Treatment","Insert","disease");
@@ -181,15 +190,24 @@ public class diseases_fragment extends Fragment  {
         etSearch = (EditText)view.findViewById(R.id.etSearchDisease);
         database sqldb = new database(getContext(),constants.database_name,null,1);
         disease_dao = new diseaseDAO(getContext(),sqldb.getDatabase());
+
+        user_dao = new userDAO(getContext(),sqldb.getDatabase());
+        user user = user_dao.getUser(nic);
+        if(user.getRole().toString().equals("patient")){
+            lnkAddDsease.setVisibility(View.INVISIBLE);
+        }else{
+            lnkAddDsease.setVisibility(View.VISIBLE);
+        }
     }
 
 
+
+
     public void search_from_server(){
-        Log.i("TAG","FUCK FUCk FUC FCUk");
         final server_request request = new server_request(getActivity());
         HashMap<String,String> arr = new HashMap<String,String>();
         arr.put("name",etSearch.getText().toString());
-        arr.put("token", token.fake_token);
+        arr.put("token", token.getTokenNumber());
 
         request.sendGetRequest(arr,constants.server_disease_search_url);
         CountDownTimer timer = new CountDownTimer(300, 100) {
