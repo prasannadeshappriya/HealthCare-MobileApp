@@ -39,6 +39,7 @@ public class login_activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+
         init();
 
         //check if some user is already login
@@ -51,8 +52,6 @@ public class login_activity extends AppCompatActivity {
             //should have to put jason respond as an bundle extra
             this.finish();
             startActivity(i);
-
-
 
         }
 
@@ -83,7 +82,11 @@ public class login_activity extends AppCompatActivity {
                 }
         );
 
-
+        /*  Test Purposes for medical reports.
+        Intent i = new Intent(this,medical_reports_activity.class);
+        this.finish();
+        startActivity(i);
+        */
     }
 
     private void start_signup_activity() {

@@ -29,7 +29,8 @@
         <service
             android:name=".Services.sync_service"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
     </application>
 
 </manifest>
