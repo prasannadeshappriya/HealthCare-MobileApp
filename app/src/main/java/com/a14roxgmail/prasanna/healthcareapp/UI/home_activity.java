@@ -158,6 +158,7 @@ public class home_activity extends AppCompatActivity
         } else if (id == R.id.nav_patient) {
             toolbar.setTitle("Patients");
             patients_fragment patients = new patients_fragment();
+            patients.setNic(signInNic);
             FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
             fragTrans.replace(R.id.frmMain,patients);
             fragTrans.commit();
@@ -184,6 +185,7 @@ public class home_activity extends AppCompatActivity
         }else if (id == R.id.nav_medical_reoprts) {
             toolbar.setTitle("Reports");
             mreports_fragment report = new mreports_fragment();
+            report.setNic(signInNic);
             FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
             fragTrans.replace(R.id.frmMain,report);
             fragTrans.commit();

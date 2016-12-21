@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -23,7 +22,7 @@ import com.a14roxgmail.prasanna.healthcareapp.R;
 import com.a14roxgmail.prasanna.healthcareapp.Services.sync_service;
 import com.a14roxgmail.prasanna.healthcareapp.constants;
 import com.a14roxgmail.prasanna.healthcareapp.server_request;
-import com.a14roxgmail.prasanna.healthcareapp.token;
+import com.a14roxgmail.prasanna.healthcareapp.tokenAuth;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,6 +43,7 @@ public class patients_fragment extends Fragment {
     private modify_data_fragment mdf;
     private TextView lnkAddPatient;
     private patientDAO patient_dao;
+    private String nic;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -78,7 +78,7 @@ public class patients_fragment extends Fragment {
         final server_request request = new server_request(getActivity());
         HashMap<String,String> arr = new HashMap<String,String>();
         arr.put("nic",etSearch.getText().toString());
-        arr.put("token", token.getTokenNumber(getContext()));
+        arr.put("token", tokenAuth.getTokenNumber(getContext(),nic));
         request.sendGetRequest(arr,constants.server_patient_search_url);
         CountDownTimer timer = new CountDownTimer(300, 100) {
             @Override
@@ -91,6 +91,10 @@ public class patients_fragment extends Fragment {
             public void onTick(long millisLeft) {}
         };
         timer.start();
+    }
+
+    public void setNic(String nic){
+        this.nic = nic.toUpperCase();
     }
 
     public  void response_data_process(server_request request){

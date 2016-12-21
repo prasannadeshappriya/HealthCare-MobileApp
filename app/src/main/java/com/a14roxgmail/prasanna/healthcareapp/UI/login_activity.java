@@ -13,13 +13,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.a14roxgmail.prasanna.healthcareapp.DAO.districtDAO;
+import com.a14roxgmail.prasanna.healthcareapp.DAO.tokenDAO;
 import com.a14roxgmail.prasanna.healthcareapp.DAO.userDAO;
 import com.a14roxgmail.prasanna.healthcareapp.Database.database;
 import com.a14roxgmail.prasanna.healthcareapp.Models.user;
 import com.a14roxgmail.prasanna.healthcareapp.R;
 import com.a14roxgmail.prasanna.healthcareapp.constants;
 import com.a14roxgmail.prasanna.healthcareapp.server_request;
-import com.a14roxgmail.prasanna.healthcareapp.token;
+import com.a14roxgmail.prasanna.healthcareapp.tokenAuth;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,7 +31,7 @@ public class login_activity extends AppCompatActivity {
     private EditText etPassword;
     private TextView lnkSignUp;
     private String user_details; //to store the data send from the server
-
+    private tokenDAO token_dao;
     private userDAO user_dao;
     private database sqlite_db;
 
@@ -81,12 +82,6 @@ public class login_activity extends AppCompatActivity {
                     }
                 }
         );
-
-        /*  Test Purposes for medical reports.
-        Intent i = new Intent(this,medical_reports_activity.class);
-        this.finish();
-        startActivity(i);
-        */
     }
 
     private void start_signup_activity() {
@@ -172,8 +167,7 @@ public class login_activity extends AppCompatActivity {
                 if (server_auth.equals("success")){
                     //get the token send by the server
                     String token_number = objResponse.getString("token");
-                    token.setTokenNumber(token_number, getBaseContext());
-                    Log.i(constants.TAG,"Token :- " + token.getTokenNumber(getBaseContext()));
+                    tokenAuth.setTokenNumber(token_number,getApplicationContext(),etNic.getText().toString());
 
                     //input nic address
                     String nic = etNic.getText().toString();
@@ -240,6 +234,7 @@ public class login_activity extends AppCompatActivity {
         etPassword = (EditText) findViewById(R.id.etPassword);
         sqlite_db = new database(this,constants.database_name,null,1);
         user_dao = new userDAO(this,sqlite_db.getDatabase());
+        token_dao = new tokenDAO(this,sqlite_db.getDatabase());
 
         districtDAO district_dao = new districtDAO(getApplicationContext(),sqlite_db.getDatabase());
         district_dao.init();

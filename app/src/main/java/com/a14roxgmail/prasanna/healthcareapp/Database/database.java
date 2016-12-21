@@ -83,9 +83,10 @@ public class database extends SQLiteOpenHelper{
         Log.i(constants.TAG,command);
         sqLiteDatabase.execSQL(command);
 
-        command = "CREATE TABLE IF NOT EXISTS tips" + "(" +
-                "tips_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "tips_description VARCHAR(255));";
+        command = "CREATE TABLE IF NOT EXISTS token" + "(" +
+                "token_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "nic VARCHAR(20), " +
+                "token VARCHAR(255));";
         Log.i(constants.TAG,command);
         sqLiteDatabase.execSQL(command);
     }

@@ -26,7 +26,7 @@ import com.a14roxgmail.prasanna.healthcareapp.R;
 import com.a14roxgmail.prasanna.healthcareapp.Services.sync_service;
 import com.a14roxgmail.prasanna.healthcareapp.constants;
 import com.a14roxgmail.prasanna.healthcareapp.server_request;
-import com.a14roxgmail.prasanna.healthcareapp.token;
+import com.a14roxgmail.prasanna.healthcareapp.tokenAuth;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -190,7 +190,7 @@ public class diseases_fragment extends Fragment  {
 
     private void init(View view) {
         lvDisease = (ListView)view.findViewById(R.id.lstDisease);
-        lstDisease = new ArrayList<disease>();
+        lstDisease = new ArrayList<>();
         lnkAddDsease = (TextView)view.findViewById(R.id.lnkAddDisease);
         etSearch = (EditText)view.findViewById(R.id.etSearchDisease);
 
@@ -208,7 +208,7 @@ public class diseases_fragment extends Fragment  {
         final server_request request = new server_request(getActivity());
         HashMap<String,String> arr = new HashMap<String,String>();
         arr.put("name",etSearch.getText().toString());
-        arr.put("token", token.getTokenNumber(getContext()));
+        arr.put("token", tokenAuth.getTokenNumber(getContext(),nic));
 
         request.sendGetRequest(arr,constants.server_disease_search_url);
         CountDownTimer timer = new CountDownTimer(300, 100) {

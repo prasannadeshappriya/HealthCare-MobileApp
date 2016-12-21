@@ -16,6 +16,7 @@ import android.widget.AutoCompleteTextView;
 import com.a14roxgmail.prasanna.healthcareapp.R;
 import com.a14roxgmail.prasanna.healthcareapp.constants;
 import com.a14roxgmail.prasanna.healthcareapp.server_request;
+import com.a14roxgmail.prasanna.healthcareapp.tokenAuth;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,6 +32,7 @@ import java.util.List;
 public class mreport_insert_fragment extends Fragment {
     private AutoCompleteTextView actv;
     private List<String> lstDisease;
+    private String nic;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,6 +53,10 @@ public class mreport_insert_fragment extends Fragment {
         );
 
         return view;
+    }
+
+    public void setNic(String nic){
+        this.nic = nic.toUpperCase();
     }
 
     private void init(View view) {
@@ -83,7 +89,7 @@ public class mreport_insert_fragment extends Fragment {
         final server_request request = new server_request(getActivity());
         HashMap<String,String> arr = new HashMap<String,String>();
         arr.put("name", actv.getText().toString());
-        arr.put("token", "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwibmljIjoiMTExMjIyMzMzViJ9.H17bsXI5aRinPqWAen8b9obPenQP6_vLBLye6Gan0jY");
+        arr.put("token", tokenAuth.getTokenNumber(getContext(),nic));
 
         request.sendGetRequest(arr, constants.server_disease_search_url);
         CountDownTimer timer = new CountDownTimer(300, 100) {

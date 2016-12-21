@@ -16,6 +16,7 @@ import com.a14roxgmail.prasanna.healthcareapp.R;
  */
 public class mreports_fragment extends Fragment {
     private TextView lnkAddMReport;
+    private String nic;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -27,6 +28,7 @@ public class mreports_fragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         mreport_insert_fragment report_insert = new mreport_insert_fragment();
+                        report_insert.setNic(nic);
                         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                         fragmentTransaction.replace(R.id.frmMain,report_insert);
                         fragmentTransaction.commit();
@@ -34,6 +36,10 @@ public class mreports_fragment extends Fragment {
                 }
         );
         return view;
+    }
+
+    public void setNic(String nic){
+        this.nic = nic.toUpperCase().toString();
     }
 
     private void init(View view) {

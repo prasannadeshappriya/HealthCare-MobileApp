@@ -20,7 +20,6 @@ import com.a14roxgmail.prasanna.healthcareapp.Models.user;
 import com.a14roxgmail.prasanna.healthcareapp.R;
 import com.a14roxgmail.prasanna.healthcareapp.constants;
 import com.a14roxgmail.prasanna.healthcareapp.server_request;
-import com.a14roxgmail.prasanna.healthcareapp.token;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -147,12 +146,11 @@ public class signup_activity extends AppCompatActivity {
 
     private void start_signup_process(){
         if(validate()){
-            final server_request request = new server_request(8,this);
+            final server_request request = new server_request(7,this);
             request.set_server_url(constants.server_signup__url);
 
             request.setParams(etName.getText().toString(),"name");
             request.setParams(etDateOfBirth.getText().toString(),"dob");
-            request.setParams(token.fake_token,"token");
             request.setParams(String.valueOf(lstDistrict.getSelectedItemId()+1),"district_id");
             request.setParams(etNIC.getText().toString(),"nic");
             request.setParams(etPassword.getText().toString(),"password");
