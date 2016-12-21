@@ -76,21 +76,21 @@ public class profile_fragment extends Fragment {
             etName.setText(patient.getName());
             etRole.setText(user.getRole());
             etDob.setText(patient.getDate_of_birth());
-            lstDistrict.setSelection(1);
+            lstDistrict.setSelection(Integer.parseInt(patient.getDistrict_id()));
         } else if(user.getRole().toString().equals("medical_officer")){
             medical_officer medical_officer = medical_officer_dao.getMedicalOfficer(nic);
             etNic.setText(nic);
             etName.setText(medical_officer.getName());
             etRole.setText(user.getRole());
             etDob.setText(medical_officer.getDate_of_birth());
-            lstDistrict.setSelection(1);
+            lstDistrict.setSelection(Integer.parseInt(medical_officer.getDistrict_id()));
         }else if(user.getRole().toString().equals("health_officer")){
             health_officer health_officer = health_officer_dao.getHealthOfficer(nic);
             etNic.setText(nic);
             etName.setText(health_officer.getName());
             etRole.setText(user.getRole());
             etDob.setText(health_officer.getDate_of_birth());
-            lstDistrict.setSelection(1);
+            lstDistrict.setSelection(Integer.parseInt(health_officer.getDistrict_id()));
         }
     }
 

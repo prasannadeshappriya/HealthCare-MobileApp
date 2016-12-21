@@ -9,7 +9,8 @@ public class constants {
 
     //java sprint tomcat server ---------------------------------------------------------------------------------------------
     //Host computer ip address and port
-    public static final String server_host_ip = "192.168.8.101:8080";
+    public static final String server_host_ip = "192.168.8.103" +
+            ":8080";
 
     //server urls
     public static final String server_login_url = "http://" + server_host_ip + "/login";
@@ -17,8 +18,10 @@ public class constants {
     public static final String server_signup__url = "http://" + server_host_ip + "/signup";
     public static final String server_patient_search_url = "http://" + server_host_ip + "/patients";
     public static final String server_patient_search_medical_report_url = "http://" + server_host_ip + "/reports";
+    public static final String server_patient_search_medical_report_insert_url = "http://" + server_host_ip + "/patients/search";
     public static final String server_medical_officer_search_medical_report_url = "http://" + server_host_ip + "/reports/search";
     public static final String server_home_url = "http://" + server_host_ip;
+    public static final String server_update_medical_report = "http://" + server_host_ip + "/reports";
 
     //php localhost server --------------------------------------------------------------------------------------------------
     //public static final String server_url = "http://192.168.43.101/request/HealthCareServer.php";

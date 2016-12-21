@@ -215,7 +215,7 @@ public class signup_activity extends AppCompatActivity {
                                     etName.getText().toString(),
                                     etDateOfBirth.getText().toString(),
                                     nic.toUpperCase(),
-                                    String.valueOf(lstDistrict.getSelectedItemId()+1),
+                                    String.valueOf(lstDistrict.getSelectedItemId()),
                                     "0"
                             );
                         }else if (user.getString("role").equals("health_officer")) {
@@ -224,7 +224,7 @@ public class signup_activity extends AppCompatActivity {
                                     etName.getText().toString(),
                                     etDateOfBirth.getText().toString(),
                                     nic.toUpperCase(),
-                                    String.valueOf(lstDistrict.getSelectedItemId()+1),
+                                    String.valueOf(lstDistrict.getSelectedItemId()),
                                     "0"
                             );
                         }if (user.getString("role").equals("medical_officer")) {
@@ -233,7 +233,7 @@ public class signup_activity extends AppCompatActivity {
                                     etName.getText().toString(),
                                     etDateOfBirth.getText().toString(),
                                     nic.toUpperCase(),
-                                    String.valueOf(lstDistrict.getSelectedItemId()+1),
+                                    String.valueOf(lstDistrict.getSelectedItemId()),
                                     "0"
                             );
 
