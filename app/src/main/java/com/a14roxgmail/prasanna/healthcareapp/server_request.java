@@ -74,7 +74,10 @@ public class server_request extends AppCompatActivity {
                 }
                 return paramMap;
             }
+
+
         };
+
         request.setTag(constants.TAG);
         requestQueue = Volley.newRequestQueue(activity);
         requestQueue.add(request);
@@ -120,4 +123,6 @@ public class server_request extends AppCompatActivity {
         stringRequest.setTag(constants.TAG);
         return getResponse();
     }
+
+
 }

@@ -44,12 +44,16 @@ public class login_activity extends AppCompatActivity {
         //check if some user is already login
         String autoLogIn = user_dao.checkAutoLogin();
         if (!autoLogIn.equals("")) {
+
             Intent i = new Intent(this, home_activity.class);
             Log.i(constants.TAG, "Auto login account detected (autoLogId):- " + autoLogIn);
             i.putExtra("nic", autoLogIn.toUpperCase());
             //should have to put jason respond as an bundle extra
             this.finish();
             startActivity(i);
+
+
+
         }
 
 
@@ -78,6 +82,8 @@ public class login_activity extends AppCompatActivity {
                     }
                 }
         );
+
+
     }
 
     private void start_signup_activity() {
@@ -87,7 +93,15 @@ public class login_activity extends AppCompatActivity {
     }
 
     public boolean nic_Validate(String nic){
-        return true;
+        if(nic.length()==10){
+            if(nic.substring(nic.length()-1).toUpperCase().equals("V")) {
+                return true;
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
     }
 
     private boolean validate(){
@@ -155,8 +169,8 @@ public class login_activity extends AppCompatActivity {
                 if (server_auth.equals("success")){
                     //get the token send by the server
                     String token_number = objResponse.getString("token");
-                    token.setTokenNumber(token_number);
-                    Log.i(constants.TAG,"Token :- " + token.getTokenNumber());
+                    token.setTokenNumber(token_number, getBaseContext());
+                    Log.i(constants.TAG,"Token :- " + token.getTokenNumber(getBaseContext()));
 
                     //input nic address
                     String nic = etNic.getText().toString();

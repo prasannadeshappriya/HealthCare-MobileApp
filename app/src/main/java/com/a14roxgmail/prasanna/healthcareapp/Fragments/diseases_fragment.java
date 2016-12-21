@@ -1,8 +1,5 @@
 package com.a14roxgmail.prasanna.healthcareapp.Fragments;
 
-import android.annotation.TargetApi;
-import android.app.ProgressDialog;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
@@ -18,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.a14roxgmail.prasanna.healthcareapp.DAO.diseaseDAO;
 import com.a14roxgmail.prasanna.healthcareapp.DAO.userDAO;
@@ -36,12 +32,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -56,14 +46,18 @@ public class diseases_fragment extends Fragment  {
     private modify_data_fragment mdf;
     private ListView lvDisease;
     private EditText etSearch;
+    private userDAO user_dao;
     private diseaseDAO disease_dao;
     private String nic;
-    private userDAO user_dao;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_diseases,container,false);
         init(view);
+
+        lblVisible();
+
         add_list_details("init");
         lnkAddDsease.setOnClickListener(
                 new View.OnClickListener() {
@@ -134,7 +128,7 @@ public class diseases_fragment extends Fragment  {
     }
 
     public void setNic(String nic){
-        this.nic = nic;
+        this.nic = nic.toUpperCase();
     }
 
     private void show_modify_data_fragment() {
@@ -154,6 +148,17 @@ public class diseases_fragment extends Fragment  {
         lnkAddDsease.setText("Add diseases");
         etSearch.setEnabled(true);
         add_list_details("init");
+    }
+
+    public void lblVisible(){
+        database db = new database(getContext(),constants.database_name,null,1);
+        userDAO user_data_ao = new userDAO(getContext(),db.getDatabase());
+        user u = user_data_ao.getUser(nic.toUpperCase());
+        if(u.getRole().toString().equals("patients")){
+            lnkAddDsease.setVisibility(View.INVISIBLE);
+        }else{
+            lnkAddDsease.setVisibility(View.VISIBLE);
+        }
     }
 
     private void add_list_details(String method) {
@@ -188,16 +193,12 @@ public class diseases_fragment extends Fragment  {
         lstDisease = new ArrayList<disease>();
         lnkAddDsease = (TextView)view.findViewById(R.id.lnkAddDisease);
         etSearch = (EditText)view.findViewById(R.id.etSearchDisease);
+
+
         database sqldb = new database(getContext(),constants.database_name,null,1);
         disease_dao = new diseaseDAO(getContext(),sqldb.getDatabase());
-
         user_dao = new userDAO(getContext(),sqldb.getDatabase());
-        user user = user_dao.getUser(nic);
-        if(user.getRole().toString().equals("patient")){
-            lnkAddDsease.setVisibility(View.INVISIBLE);
-        }else{
-            lnkAddDsease.setVisibility(View.VISIBLE);
-        }
+        Log.i("TAG",String.valueOf(user_dao.isExistsUser(nic)));
     }
 
 
@@ -207,7 +208,7 @@ public class diseases_fragment extends Fragment  {
         final server_request request = new server_request(getActivity());
         HashMap<String,String> arr = new HashMap<String,String>();
         arr.put("name",etSearch.getText().toString());
-        arr.put("token", token.getTokenNumber());
+        arr.put("token", token.getTokenNumber(getContext()));
 
         request.sendGetRequest(arr,constants.server_disease_search_url);
         CountDownTimer timer = new CountDownTimer(300, 100) {

@@ -129,7 +129,9 @@ public class userDAO extends DAO {
 
     public user getUser(String nic){
         command = "SELECT * FROM "+tableName+" WHERE nic = \"" + nic + "\";";
+        Log.i(constants.TAG,"Fuck :- " + command);
         Cursor c = sqldb.rawQuery(command,null);
+        Log.i("TAG",tableName + "   " + String.valueOf(c.getCount()));
         user user = null;
         if(c.moveToFirst()) {
             do {
