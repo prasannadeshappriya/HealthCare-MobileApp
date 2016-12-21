@@ -20,7 +20,6 @@ import java.util.List;
  */
 public class adapter_disease extends BaseAdapter{
     private List<disease> arrDisease;
-    private List<disease> filteredData;
     private Context context;
 
     public adapter_disease(Context context, List<disease> arrDisease) {

@@ -41,7 +41,6 @@ public class patients_fragment extends Fragment {
     private ListView lstPatient;
     private EditText etSearch;
     private modify_data_fragment mdf;
-    private TextView lnkAddPatient;
     private patientDAO patient_dao;
     private String nic;
     @Nullable
@@ -68,7 +67,6 @@ public class patients_fragment extends Fragment {
     public void init(View view){
         patientList = new ArrayList<>();
         lstPatient = (ListView) view.findViewById(R.id.lstPatient);
-        lnkAddPatient = (TextView)view.findViewById(R.id.lnkAddPatient);
         etSearch = (EditText) view.findViewById(R.id.etSearchPatient);
         database sqldb = new database(getContext(),constants.database_name,null,1);
         patient_dao = new patientDAO(getContext(),sqldb.getDatabase());

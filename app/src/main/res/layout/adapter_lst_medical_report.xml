@@ -11,8 +11,8 @@
 
     <TextView
         android:layout_width="wrap_content"
-        android:text="Tip Num #"
-        android:id="@+id/tvAdapterNum"
+        android:text="Medical Officer Name"
+        android:id="@+id/tvAdapterNameMedicalReport"
         android:layout_height="wrap_content" />
 
     <View
@@ -23,8 +23,21 @@
 
     <TextView
         android:layout_width="wrap_content"
-        android:text="What should be here?"
-        android:id="@+id/tvAdapterDetails"
+        android:text="Disease: ?"
+        android:id="@+id/tvAdapterDiseaseMedicalOfficer"
+        android:paddingLeft="40dp"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="Prescription: ?"
+        android:id="@+id/tvAdapterPrescriptionMedicalofficer"
+        android:paddingLeft="40dp"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="Prescription: ?"
+        android:id="@+id/tvAdapterCommentsMedicalOfficer"
         android:paddingLeft="40dp"
         android:layout_height="wrap_content" />
 

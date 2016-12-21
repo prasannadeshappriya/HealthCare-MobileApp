@@ -44,11 +44,6 @@ public class home_activity extends AppCompatActivity
         i.putExtra("args","SYNC");
         startService(i);
 
-        home_fragment home = new home_fragment();
-        FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
-        fragTrans.replace(R.id.frmMain,home);
-        fragTrans.commit();
-
         sqldb = new database(this, constants.database_name,null,1);
         user_dao = new userDAO(this,sqldb.getDatabase());
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -108,6 +103,12 @@ public class home_activity extends AppCompatActivity
         View header = navigationView.getHeaderView(0);
         tvEmail = (TextView)header.findViewById(R.id.tvEmail);
         tvEmail.setText(signInNic);
+
+        home_fragment home = new home_fragment();
+        home.setNic(signInNic);
+        FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
+        fragTrans.replace(R.id.frmMain,home);
+        fragTrans.commit();
     }
 
     @Override
@@ -152,6 +153,7 @@ public class home_activity extends AppCompatActivity
         if (id == R.id.nav_home) {
             toolbar.setTitle("Home");
             home_fragment home = new home_fragment();
+            home.setNic(signInNic);
             FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
             fragTrans.replace(R.id.frmMain,home);
             fragTrans.commit();

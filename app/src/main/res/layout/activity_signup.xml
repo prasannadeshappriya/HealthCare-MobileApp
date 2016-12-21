@@ -36,7 +36,7 @@
                 android:id="@+id/etDateOfBirth"
                 android:drawableLeft="@drawable/ic_action_address"
                 android:inputType="date"
-                android:hint="Date of Birth (DD:MM:YYYY)"/>
+                android:hint="Date of Birth (YYYY:MM:DD)"/>
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout

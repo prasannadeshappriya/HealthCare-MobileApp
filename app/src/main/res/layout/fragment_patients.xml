@@ -16,12 +16,7 @@
             android:id="@+id/etSearchPatient"
             android:hint="Search"/>
     </android.support.design.widget.TextInputLayout>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="textEnd"
-        android:id="@+id/lnkAddPatient"
-        android:text="Add patient"/>
+    
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
